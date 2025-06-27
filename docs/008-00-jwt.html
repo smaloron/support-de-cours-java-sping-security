@@ -1,0 +1,275 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en-US" data-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2025-06-27T16:32:46.17968"><title>Module 2 / Chapitre 8 : Authentification via JWT (JSON Web Tokens) | Spring Security</title><script type="application/json" id="virtual-toc-data">[{"id":"l-essentiel","level":0,"title":"L\u0027essentiel","anchor":"#l-essentiel"},{"id":"exercice-9-migration-de-taskmaster-vers-une-api-rest-avec-jwt","level":0,"title":"Exercice 9 : Migration de TaskMaster vers une API REST avec JWT","anchor":"#exercice-9-migration-de-taskmaster-vers-une-api-rest-avec-jwt"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.22.0-b776/app.css" rel="stylesheet"><meta name="msapplication-TileColor" content="#000000"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Module 2 / Chapitre 8 : Authentification via JWT (JSON Web Tokens) | Spring Security"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Spring Security Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="writerside-documentation/008-00-jwt.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Module 2 / Chapitre 8 : Authentification via JWT (JSON Web Tokens) | Spring Security"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "WebPage",
+    "@id": "writerside-documentation/008-00-jwt.html#webpage",
+    "url": "writerside-documentation/008-00-jwt.html",
+    "name": "Module 2 / Chapitre 8 : Authentification via JWT (JSON Web Tokens) | Spring Security",
+    "description": "",
+    "image": "",
+    "inLanguage":"en-US"
+}</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json">{
+    "@type": "WebSite",
+    "@id": "writerside-documentation/#website",
+    "url": "writerside-documentation/",
+    "name": "Spring Security Help"
+}</script><!-- End Schema.org --></head><body data-id="008-00-jwt" data-main-title="Module 2 / Chapitre 8 : Authentification via JWT (JSON Web Tokens)" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Spring Security  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="008-00-jwt" id="008-00-jwt.md">Module 2 / Chapitre 8 : Authentification via JWT (JSON Web Tokens)</h1><section class="chapter"><h2 id="l-essentiel" data-toc="l-essentiel">L'essentiel</h2><section class="chapter"><h3 id="objectifs-p-dagogiques" data-toc="objectifs-p-dagogiques">Objectifs p&eacute;dagogiques</h3><p id="-d21s1u_10">&Agrave; la fin de ce chapitre, vous serez capable de :</p><ul class="list _bullet" id="-d21s1u_11"><li class="list__item" id="-d21s1u_12"><p id="-d21s1u_17"><span class="control" id="-d21s1u_18">Expliquer</span> ce qu'est un JWT, sa structure et ses avantages pour les API REST.</p></li><li class="list__item" id="-d21s1u_13"><p id="-d21s1u_19"><span class="control" id="-d21s1u_20">Distinguer</span> l'authentification &quot;stateful&quot; (bas&eacute;e sur session) et &quot;stateless&quot; (bas&eacute;e sur token).</p></li><li class="list__item" id="-d21s1u_14"><p id="-d21s1u_21"><span class="control" id="-d21s1u_22">Mettre en place</span> un endpoint pour g&eacute;n&eacute;rer un token JWT lors de la connexion.</p></li><li class="list__item" id="-d21s1u_15"><p id="-d21s1u_23"><span class="control" id="-d21s1u_24">Cr&eacute;er</span> un filtre personnalis&eacute; pour valider les tokens JWT &agrave; chaque requ&ecirc;te.</p></li><li class="list__item" id="-d21s1u_16"><p id="-d21s1u_25"><span class="control" id="-d21s1u_26">Configurer</span> Spring Security pour qu'il fonctionne en mode stateless avec JWT.</p></li></ul></section><section class="chapter"><h3 id="introduction-le-billet-de-concert-la-place-du-tampon-sur-la-main" data-toc="introduction-le-billet-de-concert-la-place-du-tampon-sur-la-main">Introduction : Le Billet de Concert &agrave; la Place du Tampon sur la Main</h3><p id="-d21s1u_27">Imaginez que vous allez &agrave; un festival de musique qui dure toute une journ&eacute;e.</p><ul class="list _bullet" id="-d21s1u_28"><li class="list__item" id="-d21s1u_30"><p id="-d21s1u_32"><span class="control" id="-d21s1u_33">L'approche &quot;Stateful&quot; (avec session)</span>: &Agrave; l'entr&eacute;e, on vous met un tampon sur la main. Pour aller d'une sc&egrave;ne &agrave; l' autre, chaque agent de s&eacute;curit&eacute; doit regarder votre tampon. Le festival doit g&eacute;rer la liste des tampons valides, leur couleur, etc. Si vous perdez le tampon (effac&eacute; par l'eau), vous devez retourner &agrave; l'entr&eacute;e principale. C'est l' authentification par session : le serveur &quot;se souvient&quot; de vous (le tampon) et doit maintenir cet &eacute;tat.</p></li><li class="list__item" id="-d21s1u_31"><p id="-d21s1u_34"><span class="control" id="-d21s1u_35">L'approche &quot;Stateless&quot; (avec JWT)</span>: &Agrave; l'entr&eacute;e, on vous donne un billet de concert (un badge) infalsifiable. Ce billet contient toutes les informations n&eacute;cessaires : votre nom, les zones auxquelles vous avez acc&egrave;s (VIP, backstage), et une date d'expiration. Pour aller d'une sc&egrave;ne &agrave; l'autre, l'agent de s&eacute;curit&eacute; n'a qu'&agrave; regarder votre billet. Il n'a pas besoin de contacter l'entr&eacute;e principale ou de consulter une liste. Le billet est auto-suffisant. C'est l'authentification par JWT : le client d&eacute;tient une preuve d'identit&eacute; auto-contenue et v&eacute;rifiable.</p></li></ul><p id="-d21s1u_29">Les JWT sont les &quot;billets de concert&quot; du monde des API. Ils permettent une communication s&eacute;curis&eacute;e sans que le serveur ait besoin de stocker l'&eacute;tat de la session de chaque utilisateur, ce qui est id&eacute;al pour les architectures distribu&eacute;es et les microservices.</p></section><section class="chapter"><h3 id="qu-est-ce-qu-un-jwt" data-toc="qu-est-ce-qu-un-jwt">Qu'est-ce qu'un JWT ?</h3><p id="-d21s1u_36">Un JWT (prononc&eacute; &quot;jot&quot;) est une cha&icirc;ne de caract&egrave;res compacte et s&eacute;curis&eacute;e, d&eacute;finie par la norme <a href="https://tools.ietf.org/html/rfc7519" id="-d21s1u_40" data-external="true" rel="noopener noreferrer" target="_blank">RFC 7519</a>. Elle se compose de trois parties, s&eacute;par&eacute;es par des points (<code class="code" id="-d21s1u_41">.</code>).</p><p id="-d21s1u_37"><code class="code" id="-d21s1u_42">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</code></p><ol class="list _decimal" id="-d21s1u_38" type="1"><li class="list__item" id="-d21s1u_43"><p id="-d21s1u_46"><span class="control" id="-d21s1u_47">Header (En-t&ecirc;te)</span>: Contient les m&eacute;tadonn&eacute;es du token (l'algorithme de signature, le type de token). C'est du JSON encod&eacute; en Base64Url. <code class="code" id="-d21s1u_48">{&quot;alg&quot;: &quot;HS256&quot;, &quot;typ&quot;: &quot;JWT&quot;}</code>-&gt; <code class="code" id="-d21s1u_49">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</code></p></li><li class="list__item" id="-d21s1u_44"><p id="-d21s1u_50"><span class="control" id="-d21s1u_51">Payload (Charge utile)</span>: Contient les &quot;claims&quot; (revendications), c'est-&agrave;-dire les informations sur l' utilisateur (son ID, son nom, ses r&ocirc;les) et des m&eacute;tadonn&eacute;es (date d'&eacute;mission, date d'expiration). C'est aussi du JSON encod&eacute; en Base64Url. <code class="code" id="-d21s1u_52">{&quot;sub&quot;: &quot;john.doe&quot;, &quot;roles&quot;: [&quot;ROLE_USER&quot;], &quot;iat&quot;: 1616239022, &quot;exp&quot;: 1616325422}</code></p></li><li class="list__item" id="-d21s1u_45"><p id="-d21s1u_53"><span class="control" id="-d21s1u_54">Signature</span>: C'est la partie la plus importante pour la s&eacute;curit&eacute;. Elle est cr&eacute;&eacute;e en prenant le header encod&eacute;, le payload encod&eacute;, une <span class="control" id="-d21s1u_55">cl&eacute; secr&egrave;te</span> (connue uniquement du serveur), et en les passant dans l'algorithme de signature sp&eacute;cifi&eacute; dans le header. <code class="code" id="-d21s1u_56">HMACSHA256(base64UrlEncode(header) + &quot;.&quot; + base64UrlEncode(payload), secret)</code></p></li></ol><p id="-d21s1u_39"><span class="control" id="-d21s1u_57">Comment &ccedil;a s&eacute;curise ?</span> Si un attaquant modifie le payload (par exemple, en s'ajoutant le r&ocirc;le <code class="code" id="-d21s1u_58">ROLE_ADMIN</code>), la signature ne correspondra plus. Le serveur, en recalculant la signature avec la cl&eacute; secr&egrave;te, d&eacute;tectera imm&eacute;diatement la falsification et rejettera le token.</p></section><section class="chapter"><h3 id="le-flux-d-authentification-jwt" data-toc="le-flux-d-authentification-jwt">Le flux d'authentification JWT</h3><ol class="list _decimal" id="-d21s1u_59" type="1"><li class="list__item" id="-d21s1u_60"><p id="-d21s1u_65">L'utilisateur s'authentifie une premi&egrave;re fois avec ses identifiants (login/mot de passe) sur un endpoint d&eacute;di&eacute; (ex: <code class="code" id="-d21s1u_66">/api/login</code>).</p></li><li class="list__item" id="-d21s1u_61"><p id="-d21s1u_67">Le serveur valide les identifiants. S'ils sont corrects, il g&eacute;n&egrave;re un JWT, sign&eacute; avec sa cl&eacute; secr&egrave;te, et le renvoie au client.</p></li><li class="list__item" id="-d21s1u_62"><p id="-d21s1u_68">Le client (navigateur, application mobile) stocke ce JWT (dans le <code class="code" id="-d21s1u_69">localStorage</code>, <code class="code" id="-d21s1u_70">sessionStorage</code> ou une variable).</p></li><li class="list__item" id="-d21s1u_63"><p id="-d21s1u_71">Pour chaque requ&ecirc;te suivante vers une ressource prot&eacute;g&eacute;e, le client inclut le JWT dans l'en-t&ecirc;te HTTP <code class="code" id="-d21s1u_72">Authorization</code> avec le pr&eacute;fixe <code class="code" id="-d21s1u_73">Bearer</code>. <code class="code" id="-d21s1u_74">Authorization: Bearer &lt;token_jwt&gt;</code></p></li><li class="list__item" id="-d21s1u_64"><p id="-d21s1u_75">Le serveur re&ccedil;oit la requ&ecirc;te, extrait le token de l'en-t&ecirc;te, v&eacute;rifie sa signature et sa date d'expiration. Si tout est valide, il fait confiance aux informations du payload (r&ocirc;les, etc.) et autorise l'acc&egrave;s.</p></li></ol></section><section class="chapter"><h3 id="impl-mentation-avec-spring-security" data-toc="impl-mentation-avec-spring-security">Impl&eacute;mentation avec Spring Security</h3><p id="-d21s1u_76">Pour impl&eacute;menter JWT, nous devons changer notre approche. Fini <code class="code" id="-d21s1u_101">formLogin()</code>. Nous allons cr&eacute;er nos propres composants.</p><p id="-d21s1u_77"><span class="control" id="-d21s1u_102">&Eacute;tape 1 : Ajouter la d&eacute;pendance pour JWT</span></p><p id="-d21s1u_78">Nous utiliserons la biblioth&egrave;que <code class="code" id="-d21s1u_103">jjwt</code>, tr&egrave;s populaire et compl&egrave;te. Ajoutez ceci &agrave; votre <code class="code" id="-d21s1u_104">pom.xml</code>:</p><div class="code-block" data-lang="markup">
+
+&lt;dependency&gt;
+    &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+    &lt;artifactId&gt;jjwt-api&lt;/artifactId&gt;
+    &lt;version&gt;0.12.5&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+&lt;artifactId&gt;jjwt-impl&lt;/artifactId&gt;
+&lt;version&gt;0.12.5&lt;/version&gt;
+&lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+&lt;artifactId&gt;jjwt-jackson&lt;/artifactId&gt;
+&lt;version&gt;0.12.5&lt;/version&gt;
+&lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+</div><p id="-d21s1u_80"><span class="control" id="-d21s1u_105">&Eacute;tape 2 : Un service pour g&eacute;rer les JWT (cr&eacute;ation et validation)</span></p><p id="-d21s1u_81"><span class="control" id="-d21s1u_106"><code class="code" id="-d21s1u_107">fr/formation/spring/taskmaster/security/JwtService.java</code></span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.security;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+@Service
+public class JwtService {
+
+    @Value(&quot;${application.jwt.secretKey}&quot;)
+    private String secretKeyString;
+
+    @Value(&quot;${application.jwt.expiration}&quot;)
+    private long jwtExpiration;
+
+    // Génère le token
+    public String generateToken(UserDetails userDetails) {
+        SecretKey key = getSignInKey();
+        return Jwts.builder()
+                .subject(userDetails.getUsername())
+                .claim(&quot;authorities&quot;, userDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()))
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(key)
+                .compact();
+    }
+
+    // Extrait toutes les informations (claims) du token
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    // Extrait une information spécifique
+    public &lt;T&gt; T extractClaim(String token, Function&lt;Claims, T&gt; claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    // Valide le token
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername())) &amp;&amp; !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+
+    private Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+
+    // Construit la clé secrète
+    private SecretKey getSignInKey() {
+        byte[] keyBytes = secretKeyString.getBytes();
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+}
+</div><p id="-d21s1u_83">N'oubliez pas d'ajouter les propri&eacute;t&eacute;s dans <code class="code" id="-d21s1u_108">application.properties</code>:</p><div class="code-block" data-lang="properties">
+# Clé secrète pour signer les JWT. DOIT être longue et complexe en prod.
+# Pour la générer : new SecureRandom().generateSeed(64) puis l'encoder en Base64.
+application.jwt.secretKey=MaSuperCleSecreteDePlusDe256BitsPourEtreEnSecurite123456
+# Durée de validité du token en millisecondes (ici 24h)
+application.jwt.expiration=86400000
+</div><aside class="prompt" data-type="warning" data-title="" id="-d21s1u_85"><p>La cl&eacute; secr&egrave;te est la cl&eacute; du royaume. Ne la stockez jamais en clair dans le code ou dans un `pom.xml`. Utilisez les variables d'environnement ou un gestionnaire de secrets (comme Vault) en production.</p></aside><p id="-d21s1u_86"><span class="control" id="-d21s1u_109">&Eacute;tape 3 : Le filtre de validation JWT</span></p><p id="-d21s1u_87">Ce filtre s'ex&eacute;cutera &agrave; chaque requ&ecirc;te. Son r&ocirc;le est de v&eacute;rifier la pr&eacute;sence d'un token JWT, de le valider et de mettre &agrave; jour le contexte de s&eacute;curit&eacute;.</p><p id="-d21s1u_88"><span class="control" id="-d21s1u_110"><code class="code" id="-d21s1u_111">fr/formation/spring/taskmaster/security/JwtAuthFilter.java</code></span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.security;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+@Component
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
+
+    // ... constructeur ...
+
+    @Override
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
+        final String authHeader = request.getHeader(&quot;Authorization&quot;);
+        if (authHeader == null || !authHeader.startsWith(&quot;Bearer &quot;)) {
+            filterChain.doFilter(request, response); // Passe au filtre suivant
+            return;
+        }
+
+        final String jwt = authHeader.substring(7);
+        final String username = jwtService.extractUsername(jwt);
+
+        if (username != null &amp;&amp; SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            if (jwtService.isTokenValid(jwt, userDetails)) {
+                // Si le token est valide, on crée un objet Authentication
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null, // Pas de mot de passe ici
+                        userDetails.getAuthorities()
+                );
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // Et on le met dans le contexte de sécurité
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
+}
+</div><p id="-d21s1u_90"><span class="control" id="-d21s1u_112">&Eacute;tape 4 : Adapter <code class="code" id="-d21s1u_113">SecurityConfig</code> pour le mode &quot;stateless&quot;</span></p><p id="-d21s1u_91">C'est le changement le plus important. On d&eacute;sactive <code class="code" id="-d21s1u_114">formLogin</code>, <code class="code" id="-d21s1u_115">csrf</code> et on dit &agrave; Spring de ne pas cr&eacute;er de session.</p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.config;
+
+import fr.formation.spring.taskmaster.security.JwtAuthFilter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+// ...
+public class SecurityConfig {
+    private final JwtAuthFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider; // Notre provider custom si besoin
+
+    // ... constructeur ...
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -&gt; csrf.disable()) // CSRF n'est pas utile pour les API stateless
+                .authorizeHttpRequests(auth -&gt; auth
+                        // Notre endpoint de login est public
+                        .requestMatchers(&quot;/api/auth/**&quot;).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(session -&gt; session
+                        // On demande à Spring de ne plus gérer les sessions
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                // On peut garder notre provider custom ou utiliser celui par défaut
+                .authenticationProvider(authenticationProvider)
+                // On ajoute notre filtre JWT AVANT le filtre de login/password standard
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    // ... reste de la config (PasswordEncoder, etc.)
+}
+</div><p id="-d21s1u_93"><span class="control" id="-d21s1u_116">&Eacute;tape 5 : Cr&eacute;er un contr&ocirc;leur pour l'authentification</span></p><p id="-d21s1u_94">Puisque nous n'avons plus <code class="code" id="-d21s1u_117">formLogin</code>, nous devons cr&eacute;er notre propre endpoint pour que les utilisateurs obtiennent un token.</p><p id="-d21s1u_95"><span class="control" id="-d21s1u_118"><code class="code" id="-d21s1u_119">fr/formation/spring/taskmaster/controller/AuthController.java</code></span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.controller;
+
+import fr.formation.spring.taskmaster.dto.AuthRequest;
+import fr.formation.spring.taskmaster.dto.AuthResponse;
+import fr.formation.spring.taskmaster.security.JwtService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(&quot;/api/auth&quot;)
+public class AuthController {
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+
+    // ... constructeur ...
+
+    // Il faut exposer l'AuthenticationManager en tant que bean
+    // dans SecurityConfig pour pouvoir l'injecter ici.
+
+    @PostMapping(&quot;/login&quot;)
+    public AuthResponse authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+        // On demande à Spring de vérifier les identifiants
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authRequest.getUsername(),
+                        authRequest.getPassword()
+                )
+        );
+
+        // Si on arrive ici, l'authentification a réussi
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String jwtToken = jwtService.generateToken(userDetails);
+
+        return new AuthResponse(jwtToken);
+    }
+}
+</div><p id="-d21s1u_97">Cr&eacute;ez les DTOs <code class="code" id="-d21s1u_120">AuthRequest</code> (String username, String password) et <code class="code" id="-d21s1u_121">AuthResponse</code> (String token).</p><p id="-d21s1u_98">Pour que cela fonctionne, il faut exposer le bean <code class="code" id="-d21s1u_122">AuthenticationManager</code>: <span class="control" id="-d21s1u_123">Dans <code class="code" id="-d21s1u_124">SecurityConfig.java</code>:</span></p><div class="code-block" data-lang="java">
+// ...
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+
+@Bean
+public AuthenticationManager authenticationManager(
+        AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
+}
+</div></section></section><section class="chapter"><h2 id="exercice-9-migration-de-taskmaster-vers-une-api-rest-avec-jwt" data-toc="exercice-9-migration-de-taskmaster-vers-une-api-rest-avec-jwt">Exercice 9 : Migration de TaskMaster vers une API REST avec JWT</h2><section class="procedure-steps"><h3 id="exercice-2-3" data-toc="exercice-2-3">Passage à une authentification stateless avec JWT</h3><p id="-d21s1u_129">L'objectif est de transformer l'authentification de <b id="-d21s1u_131">TaskMaster</b>, actuellement bas&eacute;e sur des sessions et des formulaires, en une authentification stateless pour une API REST en utilisant des JWT.</p><ol class="list _decimal" id="-d21s1u_130" type="1"><li class="list__item" id="-d21s1u_132"><p>Ajoutez les d&eacute;pendances `jjwt` &agrave; votre `pom.xml`.</p></li><li class="list__item" id="-d21s1u_133"><p>Cr&eacute;ez le <code class="code" id="-d21s1u_138">JwtService</code>. Ajoutez la cl&eacute; secr&egrave;te et la dur&eacute;e d'expiration dans <code class="code" id="-d21s1u_139">application.properties</code>.</p></li><li class="list__item" id="-d21s1u_134"><p>Cr&eacute;ez le filtre <code class="code" id="-d21s1u_140">JwtAuthFilter</code> qui interceptera et validera les tokens.</p></li><li class="list__item" id="-d21s1u_135"><p>Modifiez radicalement votre <code class="code" id="-d21s1u_141">SecurityConfig</code>: </p><ul class="list _bullet" id="-d21s1u_142"><li class="list__item" id="-d21s1u_143"><p>D&eacute;sactivez CSRF et <code class="code" id="-d21s1u_148">formLogin</code>.</p></li><li class="list__item" id="-d21s1u_144"><p>Configurez la gestion des sessions en <code class="code" id="-d21s1u_149">STATELESS</code>.</p></li><li class="list__item" id="-d21s1u_145"><p>Ajoutez votre <code class="code" id="-d21s1u_150">JwtAuthFilter</code> dans la cha&icirc;ne de filtres.</p></li><li class="list__item" id="-d21s1u_146"><p>Autorisez l'acc&egrave;s public &agrave; un nouvel endpoint <code class="code" id="-d21s1u_151">/api/auth/login</code>.</p></li><li class="list__item" id="-d21s1u_147"><p>Exposez le bean <code class="code" id="-d21s1u_152">AuthenticationManager</code>.</p></li></ul></li><li class="list__item" id="-d21s1u_136"><p>Cr&eacute;ez l' <code class="code" id="-d21s1u_153">AuthController</code> avec un endpoint POST <code class="code" id="-d21s1u_154">/api/auth/login</code> qui prend un nom d'utilisateur et un mot de passe, et renvoie un JWT en cas de succ&egrave;s.</p></li><li class="list__item" id="-d21s1u_137"><p>Utilisez un client API (comme Postman, Insomnia ou `curl`) pour tester le flux : </p><ol class="list _decimal" id="-d21s1u_155" type="1"><li class="list__item" id="-d21s1u_156"><p>Faites une requ&ecirc;te POST vers <code class="code" id="-d21s1u_160">/api/auth/login</code> avec les identifiants de <code class="code" id="-d21s1u_161">john.doe</code>. Vous devriez recevoir un token JWT.</p></li><li class="list__item" id="-d21s1u_157"><p>Copiez ce token.</p></li><li class="list__item" id="-d21s1u_158"><p>Faites une requ&ecirc;te GET vers un endpoint prot&eacute;g&eacute; (ex: <code class="code" id="-d21s1u_162">/api/projects</code>) en ajoutant l'en-t&ecirc;te <code class="code" id="-d21s1u_163">Authorization: Bearer VOTRE_TOKEN_ICI</code>. Vous devriez obtenir une r&eacute;ponse 200 OK.</p></li><li class="list__item" id="-d21s1u_159"><p>Essayez d'acc&eacute;der &agrave; la m&ecirc;me ressource sans l'en-t&ecirc;te, ou avec un token invalide. Vous devriez recevoir une erreur 401 ou 403.</p></li></ol></li></ol><ol class="list _decimal"></ol></section><section class="chapter"><div class="collapse"><div class="collapse__title"><h3 id="correction-exercice-9" data-toc="correction-exercice-9">Correction exercice 9</h3></div><div class="collapse__content"><p id="-d21s1u_164">Le code n&eacute;cessaire pour compl&eacute;ter cet exercice est celui pr&eacute;sent&eacute; dans les sections ci-dessus. Voici un r&eacute;sum&eacute; des points cl&eacute;s et des pi&egrave;ges &agrave; &eacute;viter :</p><ul class="list _bullet" id="-d21s1u_165"><li class="list__item" id="-d21s1u_166"><p><b id="-d21s1u_171">D&eacute;pendances :</b> Assurez-vous d'avoir les 3 d&eacute;pendances <code class="code" id="-d21s1u_172">jjwt</code> (api, impl, jackson).</p></li><li class="list__item" id="-d21s1u_167"><p><b id="-d21s1u_173">Cl&eacute; secr&egrave;te :</b> La cl&eacute; dans <code class="code" id="-d21s1u_174">application.properties</code> doit &ecirc;tre suffisamment longue pour l'algorithme HS256 (256 bits / 8 = 32 octets/caract&egrave;res minimum). Si elle est trop courte, vous aurez une exception au d&eacute;marrage.</p></li><li class="list__item" id="-d21s1u_168"><p><b id="-d21s1u_175">Configuration de s&eacute;curit&eacute; :</b> C'est le plus grand changement. Il faut bien penser &agrave; : </p><ul class="list _bullet" id="-d21s1u_176"><li class="list__item" id="-d21s1u_177"><p><code class="code" id="-d21s1u_181">.csrf(csrf -&gt; csrf.disable())</code></p></li><li class="list__item" id="-d21s1u_178"><p><code class="code" id="-d21s1u_182">.sessionManagement(session -&gt; session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</code></p></li><li class="list__item" id="-d21s1u_179"><p>Ne plus avoir de <code class="code" id="-d21s1u_183">.formLogin()</code> ni de <code class="code" id="-d21s1u_184">.logout()</code> standard.</p></li><li class="list__item" id="-d21s1u_180"><p>Ajouter le filtre : <code class="code" id="-d21s1u_185">.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)</code></p></li></ul></li><li class="list__item" id="-d21s1u_169"><p><b id="-d21s1u_186">Exposition de l'AuthenticationManager :</b> Ne pas oublier le bean `public AuthenticationManager authenticationManager(...)` dans `SecurityConfig`, sinon vous ne pourrez pas l'injecter dans votre `AuthController`.</p></li><li class="list__item" id="-d21s1u_170"><p><b id="-d21s1u_187">Tests avec un client API :</b></p><ol class="list _decimal" id="-d21s1u_188" type="1"><li class="list__item" id="-d21s1u_189"><p><b id="-d21s1u_191">Login (POST `http://localhost:8080/api/auth/login`)</b><br> Body (raw, JSON): <code class="code" id="-d21s1u_193">{ &quot;username&quot;: &quot;john.doe&quot;, &quot;password&quot;: &quot;pass1&quot; }</code> R&eacute;ponse (200 OK): <code class="code" id="-d21s1u_194">{ &quot;token&quot;: &quot;eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb...&quot; }</code></p></li><li class="list__item" id="-d21s1u_190"><p><b id="-d21s1u_195">Acc&egrave;s &agrave; une ressource prot&eacute;g&eacute;e (GET `http://localhost:8080/api/projects`)</b><br> Headers: <code class="code" id="-d21s1u_197">Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb...</code> R&eacute;ponse : 200 OK avec les donn&eacute;es des projets.</p></li></ol></li></ul></div></div></section><section class="chapter"><h3 id="auto-valuation" data-toc="auto-valuation">Auto-&eacute;valuation</h3><ol class="list _decimal" id="-d21s1u_198" type="1"><li class="list__item" id="-d21s1u_199"><p id="-d21s1u_204"><span class="control" id="-d21s1u_205">Question ouverte :</span> Expliquez la diff&eacute;rence fondamentale entre l'authentification stateful (session) et stateless (JWT) et pourquoi cette derni&egrave;re est g&eacute;n&eacute;ralement pr&eacute;f&eacute;r&eacute;e pour les microservices.</p></li><li class="list__item" id="-d21s1u_200"><p id="-d21s1u_206"><span class="control" id="-d21s1u_208">QCM :</span> Quelle partie d'un JWT garantit son int&eacute;grit&eacute; (qu'il n'a pas &eacute;t&eacute; modifi&eacute;) ?</p><ul class="list _bullet" id="-d21s1u_207"><li class="list__item" id="-d21s1u_209"><p id="-d21s1u_213">a) Le Header</p></li><li class="list__item" id="-d21s1u_210"><p id="-d21s1u_214">b) Le Payload</p></li><li class="list__item" id="-d21s1u_211"><p id="-d21s1u_215">c) L'encodage Base64Url</p></li><li class="list__item" id="-d21s1u_212"><p id="-d21s1u_216">d) La Signature</p></li></ul></li><li class="list__item" id="-d21s1u_201"><p id="-d21s1u_217"><span class="control" id="-d21s1u_219">QCM :</span> Pour une API REST stateless s&eacute;curis&eacute;e par JWT, quelle doit &ecirc;tre la politique de cr&eacute;ation de session dans Spring Security ?</p><ul class="list _bullet" id="-d21s1u_218"><li class="list__item" id="-d21s1u_220"><p id="-d21s1u_224">a) <code class="code" id="-d21s1u_225">SessionCreationPolicy.IF_REQUIRED</code></p></li><li class="list__item" id="-d21s1u_221"><p id="-d21s1u_226">b) <code class="code" id="-d21s1u_227">SessionCreationPolicy.ALWAYS</code></p></li><li class="list__item" id="-d21s1u_222"><p id="-d21s1u_228">c) <code class="code" id="-d21s1u_229">SessionCreationPolicy.STATELESS</code></p></li><li class="list__item" id="-d21s1u_223"><p id="-d21s1u_230">d) <code class="code" id="-d21s1u_231">SessionCreationPolicy.NEVER</code></p></li></ul></li><li class="list__item" id="-d21s1u_202"><p id="-d21s1u_232"><span class="control" id="-d21s1u_233">Question ouverte :</span> Quel est le r&ocirc;le du filtre <code class="code" id="-d21s1u_234">JwtAuthFilter</code> dans l'architecture que nous avons mise en place ? D&eacute;crivez les &eacute;tapes qu'il ex&eacute;cute.</p></li><li class="list__item" id="-d21s1u_203"><p id="-d21s1u_235"><span class="control" id="-d21s1u_237">QCM :</span> O&ugrave; un client doit-il placer le JWT pour s'authentifier aupr&egrave;s d'une API prot&eacute;g&eacute;e ?</p><ul class="list _bullet" id="-d21s1u_236"><li class="list__item" id="-d21s1u_238"><p id="-d21s1u_242">a) Dans un cookie nomm&eacute; <code class="code" id="-d21s1u_243">JWT_TOKEN</code>.</p></li><li class="list__item" id="-d21s1u_239"><p id="-d21s1u_244">b) Dans le corps de la requ&ecirc;te POST.</p></li><li class="list__item" id="-d21s1u_240"><p id="-d21s1u_245">c) Dans l'en-t&ecirc;te <code class="code" id="-d21s1u_246">Authorization</code> avec le pr&eacute;fixe <code class="code" id="-d21s1u_247">Bearer</code>.</p></li><li class="list__item" id="-d21s1u_241"><p id="-d21s1u_248">d) En tant que param&egrave;tre de requ&ecirc;te URL <code class="code" id="-d21s1u_249">?token=...</code>.</p></li></ul></li></ol></section><section class="chapter"><h3 id="conclusion" data-toc="conclusion">Conclusion</h3><p id="-d21s1u_250">Vous venez de franchir une &eacute;tape majeure dans la s&eacute;curisation des applications modernes. La ma&icirc;trise de l'authentification par JWT est une comp&eacute;tence extr&ecirc;mement recherch&eacute;e et essentielle pour tout d&eacute;veloppeur travaillant sur des API REST, des microservices ou des applications mobiles.</p><p id="-d21s1u_251">Vous savez d&eacute;sormais :</p><ul class="list _bullet" id="-d21s1u_252"><li class="list__item" id="-d21s1u_255"><p id="-d21s1u_259">Ce qu'est un JWT et comment il fonctionne.</p></li><li class="list__item" id="-d21s1u_256"><p id="-d21s1u_260">Comment g&eacute;n&eacute;rer des tokens s&eacute;curis&eacute;s et les valider.</p></li><li class="list__item" id="-d21s1u_257"><p id="-d21s1u_261">Comment configurer Spring Security pour un fonctionnement enti&egrave;rement stateless.</p></li><li class="list__item" id="-d21s1u_258"><p id="-d21s1u_262">Comment construire un filtre personnalis&eacute; pour int&eacute;grer JWT dans la cha&icirc;ne de s&eacute;curit&eacute;.</p></li></ul><p id="-d21s1u_253">Votre bo&icirc;te &agrave; outils de s&eacute;curit&eacute; est maintenant bien plus compl&egrave;te. Vous &ecirc;tes capable de s&eacute;curiser aussi bien une application web monolithique traditionnelle qu'une API REST moderne.</p><p id="-d21s1u_254">Le dernier chapitre de ce module nous emm&egrave;nera encore plus loin dans la modernit&eacute; en explorant comment d&eacute;l&eacute;guer l'authentification &agrave; des fournisseurs externes comme Google ou GitHub, gr&acirc;ce aux protocoles <span class="control" id="-d21s1u_263">OAuth 2.0</span> et <span class="control" id="-d21s1u_264">OpenID Connect</span>.</p></section></section><div class="last-modified">15 juin 2025</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom"><a href="007-00-custom-auth.html" class="navigation-links__prev">Module 2 / Chapitre 7 : Personnalisation de l'Authentification</a><a href="009-00-conclusion.html" class="navigation-links__next">Conclusion</a></div></article><div id="disqus_thread"></div></div></section></main></div><script src="https://resources.jetbrains.com/writerside/apidoc/6.22.0-b776/app.js"></script></body></html>

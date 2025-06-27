@@ -1,0 +1,269 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en-US" data-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2025-06-27T16:32:46.179584"><title>Module 2 / Chapitre 6 : Gestion des Utilisateurs en Base de Donn&eacute;es | Spring Security</title><script type="application/json" id="virtual-toc-data">[{"id":"l-essentiel","level":0,"title":"L\u0027essentiel","anchor":"#l-essentiel"},{"id":"pour-aller-plus-loin","level":0,"title":"Pour aller plus loin","anchor":"#pour-aller-plus-loin"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.22.0-b776/app.css" rel="stylesheet"><meta name="msapplication-TileColor" content="#000000"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Module 2 / Chapitre 6 : Gestion des Utilisateurs en Base de Donn&eacute;es | Spring Security"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Spring Security Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="writerside-documentation/006-00-user-in-database.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Module 2 / Chapitre 6 : Gestion des Utilisateurs en Base de Donn&eacute;es | Spring Security"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "WebPage",
+    "@id": "writerside-documentation/006-00-user-in-database.html#webpage",
+    "url": "writerside-documentation/006-00-user-in-database.html",
+    "name": "Module 2 / Chapitre 6 : Gestion des Utilisateurs en Base de Donn&eacute;es | Spring Security",
+    "description": "",
+    "image": "",
+    "inLanguage":"en-US"
+}</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json">{
+    "@type": "WebSite",
+    "@id": "writerside-documentation/#website",
+    "url": "writerside-documentation/",
+    "name": "Spring Security Help"
+}</script><!-- End Schema.org --></head><body data-id="006-00-user-in-database" data-main-title="Module 2 / Chapitre 6 : Gestion des Utilisateurs en Base de Données" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Spring Security  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="006-00-user-in-database" id="006-00-user-in-database.md">Module 2 / Chapitre 6 : Gestion des Utilisateurs en Base de Données</h1><section class="chapter"><h2 id="l-essentiel" data-toc="l-essentiel">L'essentiel</h2><section class="chapter"><h3 id="objectifs-p-dagogiques" data-toc="objectifs-p-dagogiques">Objectifs p&eacute;dagogiques</h3><p id="-ozr5cq_12">&Agrave; la fin de ce chapitre, vous serez capable de :</p><ul class="list _bullet" id="-ozr5cq_13"><li class="list__item" id="-ozr5cq_14"><p id="-ozr5cq_19"><span class="control" id="-ozr5cq_20">Remplacer</span> la gestion des utilisateurs en m&eacute;moire par une source de donn&eacute;es persistante (JPA).</p></li><li class="list__item" id="-ozr5cq_15"><p id="-ozr5cq_21"><span class="control" id="-ozr5cq_22">Impl&eacute;menter</span> l'interface <code class="code" id="-ozr5cq_23">UserDetailsService</code> pour connecter Spring Security &agrave; votre base de donn&eacute;es.</p></li><li class="list__item" id="-ozr5cq_16"><p id="-ozr5cq_24"><span class="control" id="-ozr5cq_25">Adapter</span> votre entit&eacute; utilisateur pour qu'elle respecte le contrat <code class="code" id="-ozr5cq_26">UserDetails</code> de Spring Security.</p></li><li class="list__item" id="-ozr5cq_17"><p id="-ozr5cq_27"><span class="control" id="-ozr5cq_28">Stocker</span> des mots de passe hach&eacute;s avec BCrypt dans la base de donn&eacute;es et les v&eacute;rifier.</p></li><li class="list__item" id="-ozr5cq_18"><p id="-ozr5cq_29"><span class="control" id="-ozr5cq_30">Mettre en place</span> une strat&eacute;gie pour initialiser la base de donn&eacute;es avec des utilisateurs de test.</p></li></ul></section><section class="chapter"><h3 id="introduction-du-registre-papier-au-syst-me-d-information" data-toc="introduction-du-registre-papier-au-syst-me-d-information">Introduction : Du Registre Papier au Syst&egrave;me d'Information</h3><p id="-ozr5cq_31">Jusqu'&agrave; pr&eacute;sent, notre application TaskMaster s'appuyait sur un <code class="code" id="-ozr5cq_34">InMemoryUserDetailsManager</code>. C'est comme si la r&eacute;ceptionniste de notre immeuble avait la liste des employ&eacute;s sur un post-it. C'est rapide et pratique pour quelques tests, mais totalement irr&eacute;aliste. Que se passe-t-il si on red&eacute;marre le serveur ? Tous les utilisateurs disparaissent ! Et comment g&eacute;rer des milliers d'utilisateurs ?</p><p id="-ozr5cq_32">Dans ce chapitre, nous allons professionnaliser notre syst&egrave;me d'authentification. Nous allons connecter Spring Security au v&eacute;ritable syst&egrave;me d'information de notre application : sa base de donn&eacute;es. Nous allons apprendre &agrave; dire &agrave; Spring : &quot; Ne cherche plus les utilisateurs sur un bout de papier. Va les chercher dans la table <code class="code" id="-ozr5cq_35">users</code> de la base de donn&eacute;es, qui est la source de v&eacute;rit&eacute;.&quot;</p><p id="-ozr5cq_33">C'est l'&eacute;tape la plus cruciale pour rendre votre syst&egrave;me de s&eacute;curit&eacute; robuste, persistant et &eacute;volutif.</p></section><section class="chapter"><h3 id="le-pont-entre-spring-security-et-vos-donn-es-userdetailsservice" data-toc="le-pont-entre-spring-security-et-vos-donn-es-userdetailsservice">Le pont entre Spring Security et vos donn&eacute;es : <code class="code" id="-ozr5cq_41">UserDetailsService</code></h3><p id="-ozr5cq_37">Le c&oelig;ur de cette int&eacute;gration est une interface tr&egrave;s simple de Spring Security : <code class="code" id="-ozr5cq_42">UserDetailsService</code>. Elle n'a qu'une seule m&eacute;thode :</p><div class="code-block" data-lang="java">
+UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+</div><p id="-ozr5cq_39">Le r&ocirc;le de cette interface est de servir de <span class="control" id="-ozr5cq_43">pont</span> (ou d'adaptateur) entre le monde de Spring Security et votre sch&eacute;ma de donn&eacute;es. Quand un utilisateur tente de se connecter, Spring Security appelle cette m&eacute;thode avec le nom d'utilisateur saisi. Votre travail est d'impl&eacute;menter cette m&eacute;thode pour :</p><ol class="list _decimal" id="-ozr5cq_40" type="1"><li class="list__item" id="-ozr5cq_44"><p id="-ozr5cq_47">Chercher l'utilisateur dans votre base de donn&eacute;es (via son repository).</p></li><li class="list__item" id="-ozr5cq_45"><p id="-ozr5cq_48">Si l'utilisateur n'est pas trouv&eacute;, lancer une <code class="code" id="-ozr5cq_49">UsernameNotFoundException</code>.</p></li><li class="list__item" id="-ozr5cq_46"><p id="-ozr5cq_50">Si l'utilisateur est trouv&eacute;, le retourner sous la forme d'un objet qui impl&eacute;mente l'interface <code class="code" id="-ozr5cq_51">UserDetails</code>.</p></li></ol></section><section class="chapter"><h3 id="tape-1-adapter-notre-entit-user-pour-tre-un-userdetails" data-toc="tape-1-adapter-notre-entit-user-pour-tre-un-userdetails">&Eacute;tape 1 : Adapter notre entit&eacute; <code class="code" id="-ozr5cq_57">User</code> pour &ecirc;tre un <code class="code" id="-ozr5cq_58">UserDetails</code></h3><p id="-ozr5cq_53">Spring Security a besoin d'un objet qui respecte un certain contrat : l'interface <code class="code" id="-ozr5cq_59">UserDetails</code>. Cette interface d&eacute;finit les m&eacute;thodes pour obtenir le nom d'utilisateur, le mot de passe (hach&eacute; !), les r&ocirc;les (autorit&eacute;s), et le statut du compte (expir&eacute;, verrouill&eacute;...).</p><p id="-ozr5cq_54">La fa&ccedil;on la plus directe est de faire en sorte que notre entit&eacute; <code class="code" id="-ozr5cq_60">User</code> impl&eacute;mente <code class="code" id="-ozr5cq_61">UserDetails</code>.</p><p id="-ozr5cq_55"><span class="control" id="-ozr5cq_62"><code class="code" id="-ozr5cq_63">fr/formation/spring/taskmaster/model/User.java</code> (mise &agrave; jour)</span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.model;
+
+import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
+
+@Entity
+@Table(name = &quot;users&quot;)
+public class User implements UserDetails { // On implémente UserDetails
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    private String role; // Ex: &quot;ROLE_USER&quot;, &quot;ROLE_ADMIN&quot;
+
+    // ... autres champs (email, etc.) ...
+
+    // --- Méthodes de l'interface UserDetails ---
+
+    @Override
+    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+        // Transforme notre simple String &quot;role&quot; en une collection d'autorités
+        return Collections.singletonList(
+                new SimpleGrantedAuthority(this.role)
+        );
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    // Pour la démo, on considère que les comptes n'expirent jamais
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    // --- Getters et Setters pour les autres champs ---
+}
+</div></section><section class="chapter"><h3 id="tape-2-mettre-jour-le-userrepository" data-toc="tape-2-mettre-jour-le-userrepository">&Eacute;tape 2 : Mettre &agrave; jour le <code class="code" id="-ozr5cq_68">UserRepository</code></h3><p id="-ozr5cq_65">Nous avons besoin d'une m&eacute;thode pour trouver un utilisateur par son <code class="code" id="-ozr5cq_69">username</code>.</p><p id="-ozr5cq_66"><span class="control" id="-ozr5cq_70"><code class="code" id="-ozr5cq_71">fr/formation/spring/taskmaster/repository/UserRepository.java</code> (mise &agrave; jour)</span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.repository;
+
+import fr.formation.spring.taskmaster.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository&lt;User, Long&gt; {
+
+    // Spring Data JPA va automatiquement générer l'implémentation
+    Optional&lt;User&gt; findByUsername(String username);
+}
+</div></section><section class="chapter"><h3 id="tape-3-cr-er-notre-impl-mentation-de-userdetailsservice" data-toc="tape-3-cr-er-notre-impl-mentation-de-userdetailsservice">&Eacute;tape 3 : Cr&eacute;er notre impl&eacute;mentation de <code class="code" id="-ozr5cq_77">UserDetailsService</code></h3><p id="-ozr5cq_73">C'est ici que nous construisons le pont.</p><p id="-ozr5cq_74"><span class="control" id="-ozr5cq_78"><code class="code" id="-ozr5cq_79">fr/formation/spring/taskmaster/service/JpaUserDetailsService.java</code> (nouveau fichier)</span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.service;
+
+import fr.formation.spring.taskmaster.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class JpaUserDetailsService implements UserDetailsService {
+
+    private final UserRepository userRepository;
+
+    // Injection du repository via le constructeur
+    public JpaUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+        // On cherche l'utilisateur dans la base de données
+        return userRepository.findByUsername(username)
+                // Si non trouvé, on lève une exception que Spring Security gèrera
+                .orElseThrow(() -&gt;
+                        new UsernameNotFoundException(
+                                &quot;User &quot; + username + &quot; not found&quot;
+                        )
+                );
+    }
+}
+</div></section><section class="chapter"><h3 id="tape-4-nettoyer-securityconfig" data-toc="tape-4-nettoyer-securityconfig">&Eacute;tape 4 : Nettoyer <code class="code" id="-ozr5cq_86">SecurityConfig</code></h3><p id="-ozr5cq_81">La beaut&eacute; du syst&egrave;me est que notre <code class="code" id="-ozr5cq_87">SecurityConfig</code> devient encore plus simple. Spring Boot est assez intelligent pour d&eacute;tecter qu'il existe un bean de type <code class="code" id="-ozr5cq_88">UserDetailsService</code> dans le contexte de l'application et l'utiliser automatiquement.</p><p id="-ozr5cq_82"><span class="control" id="-ozr5cq_89"><code class="code" id="-ozr5cq_90">fr/formation/spring/taskmaster/config/SecurityConfig.java</code> (mise &agrave; jour)</span></p><div class="code-block" data-lang="java">
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    // ... bean SecurityFilterChain ...
+    // ... bean PasswordEncoder ...
+
+    // SUPPRIMEZ le bean UserDetailsService qui utilisait InMemoryUserDetailsManager !
+    /*
+    @Bean
+    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+        // ... code à supprimer ...
+    }
+    */
+}
+</div><p id="-ozr5cq_84">C'est tout ! En retirant le bean en m&eacute;moire, Spring va automatiquement se brancher sur notre <code class="code" id="-ozr5cq_91">JpaUserDetailsService</code>.</p></section></section><section class="chapter"><h2 id="pour-aller-plus-loin" data-toc="pour-aller-plus-loin">Pour aller plus loin</h2><section class="chapter"><h3 id="initialiser-la-base-de-donn-es-data-seeding" data-toc="initialiser-la-base-de-donn-es-data-seeding">Initialiser la base de donn&eacute;es (Data Seeding)</h3><p id="-ozr5cq_98">Notre syst&egrave;me est pr&ecirc;t, mais notre base de donn&eacute;es est vide ! Comment se connecter ? Nous devons ins&eacute;rer nos utilisateurs de test au d&eacute;marrage de l'application. La meilleure fa&ccedil;on de le faire dans Spring Boot est d'utiliser un <code class="code" id="-ozr5cq_101">CommandLineRunner</code>. C'est un bean dont la m&eacute;thode <code class="code" id="-ozr5cq_102">run()</code> est ex&eacute;cut&eacute;e une seule fois, juste apr&egrave;s le d&eacute;marrage de l'application.</p><p id="-ozr5cq_99"><span class="control" id="-ozr5cq_103"><code class="code" id="-ozr5cq_104">fr/formation/spring/taskmaster/config/DataSeeder.java</code> (nouveau fichier)</span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.config;
+
+import fr.formation.spring.taskmaster.model.User;
+import fr.formation.spring.taskmaster.repository.UserRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+public class DataSeeder implements CommandLineRunner {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public DataSeeder(UserRepository userRepository,
+                      PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        // On ne crée les utilisateurs que si la base est vide
+        if (userRepository.count() == 0) {
+            // Création de l'utilisateur standard
+            User user = new User();
+            user.setUsername(&quot;john.doe&quot;);
+            // Le mot de passe doit être encodé avant d'être sauvegardé !
+            user.setPassword(passwordEncoder.encode(&quot;pass1&quot;));
+            user.setRole(&quot;ROLE_USER&quot;);
+            // ... setter d'autres champs si nécessaire
+            userRepository.save(user);
+
+            // Création de l'administrateur
+            User admin = new User();
+            admin.setUsername(&quot;jane.smith&quot;);
+            admin.setPassword(passwordEncoder.encode(&quot;pass2&quot;));
+            admin.setRole(&quot;ROLE_ADMIN&quot;);
+            userRepository.save(admin);
+
+            System.out.println(&quot;&gt;&gt;&gt; Utilisateurs de test créés !&quot;);
+        }
+    }
+}
+</div></section><section class="chapter"><h3 id="d-couplage-le-pattern-wrapper" data-toc="d-couplage-le-pattern-wrapper">D&eacute;couplage : Le Pattern &quot;Wrapper&quot;</h3><p id="-ozr5cq_105">Faire impl&eacute;menter <code class="code" id="-ozr5cq_112">UserDetails</code> par notre entit&eacute; JPA est pratique, mais cr&eacute;e un <span class="control" id="-ozr5cq_113">couplage</span> entre notre mod&egrave;le de domaine (<code class="code" id="-ozr5cq_114">User</code>) et un framework de s&eacute;curit&eacute;. Certains architectes pr&eacute;f&egrave;rent garder les entit&eacute;s &quot;pures&quot; (simples POJOs).</p><p id="-ozr5cq_106">Une solution plus &eacute;l&eacute;gante est d'utiliser un pattern &quot;Wrapper&quot; ou &quot;Adapter&quot;. On cr&eacute;e une classe d&eacute;di&eacute;e qui impl&eacute;mente <code class="code" id="-ozr5cq_115">UserDetails</code> et qui &quot;enveloppe&quot; notre entit&eacute; <code class="code" id="-ozr5cq_116">User</code>.</p><p id="-ozr5cq_107"><span class="control" id="-ozr5cq_117">1. La classe <code class="code" id="-ozr5cq_118">SecurityUser</code> (le wrapper)</span></p><div class="code-block" data-lang="java">
+public class SecurityUser implements UserDetails {
+    private final User user; // Notre entité &quot;pure&quot;
+
+    public SecurityUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String getUsername() {
+        return user.getUsername();
+    }
+
+    @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    // ... on délègue tous les appels à l'objet user ...
+}
+</div><p id="-ozr5cq_109"><span class="control" id="-ozr5cq_119">2. Adapter le <code class="code" id="-ozr5cq_120">JpaUserDetailsService</code></span></p><div class="code-block" data-lang="java">
+
+@Service
+public class JpaUserDetailsService implements UserDetailsService {
+    // ...
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(/* ... */);
+
+        // On retourne le wrapper, pas l'entité directement
+        return new SecurityUser(user);
+    }
+}
+</div><p id="-ozr5cq_111">Avec cette approche, votre entit&eacute; <code class="code" id="-ozr5cq_121">User</code> n'a plus besoin d'impl&eacute;menter <code class="code" id="-ozr5cq_122">UserDetails</code>. Elle reste un simple objet de donn&eacute;es, et toute la logique de s&eacute;curit&eacute; est contenue dans des classes sp&eacute;cifiques &agrave; la s&eacute;curit&eacute;. C'est une excellente pratique pour les projets de grande envergure.</p></section><section class="chapter"><h3 id="exercice-7-migration-vers-une-base-de-donn-es-pour-taskmaster" data-toc="exercice-7-migration-vers-une-base-de-donn-es-pour-taskmaster">Exercice 7 : Migration vers une base de donn&eacute;es pour TaskMaster</h3><section class="procedure-steps"><h3 id="exercice-2-1" data-toc="exercice-2-1">Migration complète de l'authentification vers JPA</h3><p id="-ozr5cq_124">L'objectif est de migrer enti&egrave;rement le syst&egrave;me d'authentification de notre projet <b id="-ozr5cq_126">TaskMaster</b> de <code class="code" id="-ozr5cq_127">InMemoryUserDetailsManager</code> vers une base de donn&eacute;es H2 persist&eacute;e via JPA.</p><ol class="list _decimal" id="-ozr5cq_125" type="1"><li class="list__item" id="-ozr5cq_128"><p>Modifiez l'entit&eacute; <code class="code" id="-ozr5cq_134">fr.formation.spring.taskmaster.model.User</code> pour qu'elle impl&eacute;mente l'interface <code class="code" id="-ozr5cq_135">UserDetails</code>. Assurez-vous d'impl&eacute;menter toutes les m&eacute;thodes requises. Le champ `role` (String) devra &ecirc;tre transform&eacute; en <code class="code" id="-ozr5cq_136">Collection&lt;GrantedAuthority&gt;</code> dans la m&eacute;thode <code class="code" id="-ozr5cq_137">getAuthorities()</code>.</p></li><li class="list__item" id="-ozr5cq_129"><p>Mettez &agrave; jour l'interface <code class="code" id="-ozr5cq_138">UserRepository</code> pour y inclure la m&eacute;thode <code class="code" id="-ozr5cq_139">Optional&lt;User&gt; findByUsername(String username)</code>.</p></li><li class="list__item" id="-ozr5cq_130"><p>Cr&eacute;ez la classe <code class="code" id="-ozr5cq_140">JpaUserDetailsService</code> dans le package <code class="code" id="-ozr5cq_141">service</code>. Elle doit impl&eacute;menter <code class="code" id="-ozr5cq_142">UserDetailsService</code>, injecter <code class="code" id="-ozr5cq_143">UserRepository</code> et impl&eacute;menter correctement la m&eacute;thode <code class="code" id="-ozr5cq_144">loadUserByUsername</code>.</p></li><li class="list__item" id="-ozr5cq_131"><p>Modifiez votre classe <code class="code" id="-ozr5cq_145">SecurityConfig</code> en supprimant compl&egrave;tement le bean <code class="code" id="-ozr5cq_146">UserDetailsService</code> qui cr&eacute;ait les utilisateurs en m&eacute;moire.</p></li><li class="list__item" id="-ozr5cq_132"><p>Cr&eacute;ez la classe <code class="code" id="-ozr5cq_147">DataSeeder</code> dans le package <code class="code" id="-ozr5cq_148">config</code>. Elle doit impl&eacute;menter <code class="code" id="-ozr5cq_149">CommandLineRunner</code> et injecter <code class="code" id="-ozr5cq_150">UserRepository</code> et <code class="code" id="-ozr5cq_151">PasswordEncoder</code>. Dans sa m&eacute;thode <code class="code" id="-ozr5cq_152">run</code>, elle doit cr&eacute;er et sauvegarder les utilisateurs <code class="code" id="-ozr5cq_153">john.doe</code> (ROLE_USER) et <code class="code" id="-ozr5cq_154">jane.smith</code> (ROLE_ADMIN) avec des mots de passe encod&eacute;s, uniquement si la base de donn&eacute;es est vide.</p></li><li class="list__item" id="-ozr5cq_133"><p>Lancez l'application. V&eacute;rifiez les logs pour vous assurer que vos utilisateurs sont bien cr&eacute;&eacute;s. Tentez de vous connecter avec <code class="code" id="-ozr5cq_155">john.doe</code>/<code class="code" id="-ozr5cq_156">pass1</code> et <code class="code" id="-ozr5cq_157">jane.smith</code>/<code class="code" id="-ozr5cq_158">pass2</code>. V&eacute;rifiez que les r&egrave;gles d'autorisation fonctionnent toujours.</p></li></ol><ol class="list _decimal"></ol></section></section><section class="chapter"><div class="collapse"><div class="collapse__title"><h3 id="correction-exercice-7" data-toc="correction-exercice-7">Correction exercice 7</h3></div><div class="collapse__content"><p id="-ozr5cq_159">Si vous avez bien suivi toutes les &eacute;tapes, voici les fichiers cl&eacute;s de votre application dans leur &eacute;tat final pour cet exercice.</p><p id="-ozr5cq_160"><span class="control" id="-ozr5cq_171">1. <code class="code" id="-ozr5cq_172">User.java</code> (modifi&eacute;e)</span></p><div class="code-block" data-lang="java">
+// Contenu identique à celui montré dans la section &quot;L'essentiel&quot;.
+// Il est crucial d'implémenter UserDetails et toutes ses méthodes.
+</div><p id="-ozr5cq_162"><span class="control" id="-ozr5cq_173">2. <code class="code" id="-ozr5cq_174">UserRepository.java</code> (modifi&eacute;e)</span></p><div class="code-block" data-lang="java">
+// Contenu identique à celui montré dans la section &quot;L'essentiel&quot;.
+</div><p id="-ozr5cq_164"><span class="control" id="-ozr5cq_175">3. <code class="code" id="-ozr5cq_176">JpaUserDetailsService.java</code> (nouvelle)</span></p><div class="code-block" data-lang="java">
+// Contenu identique à celui montré dans la section &quot;L'essentiel&quot;.
+</div><p id="-ozr5cq_166"><span class="control" id="-ozr5cq_177">4. <code class="code" id="-ozr5cq_178">SecurityConfig.java</code> (modifi&eacute;e/nettoy&eacute;e)</span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.config;
+// ... imports ...
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
+        // La configuration du filter chain ne change pas
+        http
+                .authorizeHttpRequests(/* ... */)
+                .formLogin(/* ... */)
+                .logout(/* ... */)
+                .csrf(/* ... */);
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    // Le bean UserDetailsService a été supprimé. Spring utilisera le nôtre.
+}
+</div><p id="-ozr5cq_168"><span class="control" id="-ozr5cq_179">5. <code class="code" id="-ozr5cq_180">DataSeeder.java</code> (nouvelle)</span></p><div class="code-block" data-lang="java">
+// Contenu identique à celui montré dans la section &quot;Pour aller plus loin&quot;.
+</div><p id="-ozr5cq_170">Au lancement, vous devriez voir le message &quot;&gt;&gt;&gt; Utilisateurs de test cr&eacute;&eacute;s !&quot; dans la console. Vous pouvez ensuite vous connecter avec les identifiants d&eacute;finis, et tout fonctionnera comme avant, mais cette fois, les donn&eacute;es proviennent d'une base de donn&eacute;es ! Vous pouvez m&ecirc;me vous connecter &agrave; la console H2 (`http://localhost:8080/h2-console`) et ex&eacute;cuter `SELECT * FROM USERS` pour voir vos utilisateurs, avec leurs mots de passe bien hach&eacute;s.</p></div></div></section><section class="chapter"><h3 id="auto-valuation" data-toc="auto-valuation">Auto-&eacute;valuation</h3><ol class="list _decimal" id="-ozr5cq_181" type="1"><li class="list__item" id="-ozr5cq_182"><p id="-ozr5cq_187"><span class="control" id="-ozr5cq_188">Question ouverte :</span> Quel est le r&ocirc;le de l'interface <code class="code" id="-ozr5cq_189">UserDetailsService</code> et pourquoi est-elle si fondamentale pour connecter Spring Security &agrave; une source de donn&eacute;es personnalis&eacute;e ?</p></li><li class="list__item" id="-ozr5cq_183"><p id="-ozr5cq_190"><span class="control" id="-ozr5cq_192">QCM :</span> Quelle exception devez-vous lancer dans <code class="code" id="-ozr5cq_193">loadUserByUsername</code> si l'utilisateur n'est pas trouv&eacute; ?</p><ul class="list _bullet" id="-ozr5cq_191"><li class="list__item" id="-ozr5cq_194"><p id="-ozr5cq_198">a) <code class="code" id="-ozr5cq_199">IllegalStateException</code></p></li><li class="list__item" id="-ozr5cq_195"><p id="-ozr5cq_200">b) <code class="code" id="-ozr5cq_201">UserNotFoundException</code></p></li><li class="list__item" id="-ozr5cq_196"><p id="-ozr5cq_202">c) <code class="code" id="-ozr5cq_203">UsernameNotFoundException</code></p></li><li class="list__item" id="-ozr5cq_197"><p id="-ozr5cq_204">d) <code class="code" id="-ozr5cq_205">AccessDeniedException</code></p></li></ul></li><li class="list__item" id="-ozr5cq_184"><p id="-ozr5cq_206"><span class="control" id="-ozr5cq_208">QCM :</span> Comment Spring Security trouve-t-il votre impl&eacute;mentation personnalis&eacute;e de <code class="code" id="-ozr5cq_209">UserDetailsService</code> (par exemple <code class="code" id="-ozr5cq_210">JpaUserDetailsService</code>) ?</p><ul class="list _bullet" id="-ozr5cq_207"><li class="list__item" id="-ozr5cq_211"><p id="-ozr5cq_215">a) Il faut le d&eacute;clarer explicitement dans <code class="code" id="-ozr5cq_216">application.properties</code>.</p></li><li class="list__item" id="-ozr5cq_212"><p id="-ozr5cq_217">b) Il scanne le classpath pour toute classe dont le nom finit par <code class="code" id="-ozr5cq_218">UserDetailsService</code>.</p></li><li class="list__item" id="-ozr5cq_213"><p id="-ozr5cq_219">c) Gr&acirc;ce &agrave; l'injection de d&eacute;pendances, il cherche un bean de type <code class="code" id="-ozr5cq_220">UserDetailsService</code> dans le contexte de l'application.</p></li><li class="list__item" id="-ozr5cq_214"><p id="-ozr5cq_221">d) Il faut surcharger une m&eacute;thode <code class="code" id="-ozr5cq_222">configure(AuthenticationManagerBuilder auth)</code>. (ancienne m&eacute;thode)</p></li></ul></li><li class="list__item" id="-ozr5cq_185"><p id="-ozr5cq_223"><span class="control" id="-ozr5cq_224">Question ouverte :</span> Expliquez pourquoi vous ne devez jamais, au grand jamais, stocker un mot de passe en clair dans la base de donn&eacute;es et comment le <code class="code" id="-ozr5cq_225">PasswordEncoder</code> et le <code class="code" id="-ozr5cq_226">DataSeeder</code> travaillent ensemble pour &eacute;viter cela.</p></li><li class="list__item" id="-ozr5cq_186"><p id="-ozr5cq_227"><span class="control" id="-ozr5cq_229">QCM :</span> Pour ex&eacute;cuter du code une seule fois au d&eacute;marrage de l'application (par exemple, pour initialiser une base de donn&eacute;es), une bonne pratique Spring Boot est de cr&eacute;er un bean qui impl&eacute;mente :</p><ul class="list _bullet" id="-ozr5cq_228"><li class="list__item" id="-ozr5cq_230"><p id="-ozr5cq_234">a) <code class="code" id="-ozr5cq_235">ApplicationRunner</code> ou <code class="code" id="-ozr5cq_236">CommandLineRunner</code></p></li><li class="list__item" id="-ozr5cq_231"><p id="-ozr5cq_237">b) <code class="code" id="-ozr5cq_238">InitializingBean</code></p></li><li class="list__item" id="-ozr5cq_232"><p id="-ozr5cq_239">c) <code class="code" id="-ozr5cq_240">StartupRunner</code></p></li><li class="list__item" id="-ozr5cq_233"><p id="-ozr5cq_241">d) <code class="code" id="-ozr5cq_242">Runnable</code></p></li></ul></li></ol></section><section class="chapter"><h3 id="conclusion" data-toc="conclusion">Conclusion</h3><p id="-ozr5cq_243">F&eacute;licitations ! Vous venez de r&eacute;aliser l'une des int&eacute;grations les plus importantes et les plus courantes avec Spring Security. Votre application dispose d&eacute;sormais d'un syst&egrave;me d'authentification de niveau professionnel, bas&eacute; sur des donn&eacute;es persistantes.</p><p id="-ozr5cq_244">Vous avez appris &agrave; fa&ccedil;onner vos donn&eacute;es pour qu'elles &quot;parlent le langage&quot; de Spring Security via l'interface <code class="code" id="-ozr5cq_246">UserDetails</code>, et &agrave; construire le pont entre les deux mondes avec <code class="code" id="-ozr5cq_247">UserDetailsService</code>. Vous savez maintenant comment g&eacute;rer les mots de passe de mani&egrave;re s&eacute;curis&eacute;e en base de donn&eacute;es et comment initialiser votre application avec des donn&eacute;es de test.</p><p id="-ozr5cq_245">Maintenant que la base est solide, nous pouvons commencer &agrave; construire des choses plus complexes par-dessus. Et si le m&eacute;canisme d'authentification par formulaire ne suffisait pas ? Et si nous devions impl&eacute;menter une logique d'authentification tr&egrave;s sp&eacute;cifique ? Le prochain chapitre nous plongera dans la personnalisation avanc&eacute;e de l'authentification, en cr&eacute;ant nos propres <code class="code" id="-ozr5cq_248">AuthenticationProvider</code>.</p></section></section><div class="last-modified">15 juin 2025</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom"><a href="005-00-csrf.html" class="navigation-links__prev">Module 1 / Chapitre 5 : Protection contre les Attaques CSRF</a><a href="007-00-custom-auth.html" class="navigation-links__next">Module 2 / Chapitre 7 : Personnalisation de l'Authentification</a></div></article><div id="disqus_thread"></div></div></section></main></div><script src="https://resources.jetbrains.com/writerside/apidoc/6.22.0-b776/app.js"></script></body></html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en-US" data-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2025-06-27T16:32:46.179854"><title>Module 1 / Chapitre 3 : Authentification &ndash; Premiers Pas | Spring Security</title><script type="application/json" id="virtual-toc-data">[{"id":"l-essentiel","level":0,"title":"L\u0027essentiel","anchor":"#l-essentiel"},{"id":"pour-aller-plus-loin","level":0,"title":"Pour aller plus loin","anchor":"#pour-aller-plus-loin"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.22.0-b776/app.css" rel="stylesheet"><meta name="msapplication-TileColor" content="#000000"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Module 1 / Chapitre 3 : Authentification &ndash; Premiers Pas | Spring Security"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Spring Security Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="writerside-documentation/003-00-authentication.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Module 1 / Chapitre 3 : Authentification &ndash; Premiers Pas | Spring Security"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "WebPage",
+    "@id": "writerside-documentation/003-00-authentication.html#webpage",
+    "url": "writerside-documentation/003-00-authentication.html",
+    "name": "Module 1 / Chapitre 3 : Authentification &ndash; Premiers Pas | Spring Security",
+    "description": "",
+    "image": "",
+    "inLanguage":"en-US"
+}</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json">{
+    "@type": "WebSite",
+    "@id": "writerside-documentation/#website",
+    "url": "writerside-documentation/",
+    "name": "Spring Security Help"
+}</script><!-- End Schema.org --></head><body data-id="003-00-authentication" data-main-title="Module 1 / Chapitre 3 : Authentification – Premiers Pas" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Spring Security  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="003-00-authentication" id="003-00-authentication.md">Module 1 / Chapitre 3 : Authentification – Premiers Pas</h1><p id="z7gncb6_2">Absolument ! Poursuivons notre parcours en prenant les r&ecirc;nes du processus d'authentification.</p><section class="chapter"><h2 id="l-essentiel" data-toc="l-essentiel">L'essentiel</h2><section class="chapter"><h3 id="objectifs-p-dagogiques" data-toc="objectifs-p-dagogiques">Objectifs p&eacute;dagogiques</h3><p id="z7gncb6_12">&Agrave; la fin de ce chapitre, vous serez capable de :</p><ul class="list _bullet" id="z7gncb6_13"><li class="list__item" id="z7gncb6_14"><p id="z7gncb6_18"><span class="control" id="z7gncb6_19">Diff&eacute;rencier</span> les principaux types d'authentification web.</p></li><li class="list__item" id="z7gncb6_15"><p id="z7gncb6_20"><span class="control" id="z7gncb6_21">Configurer</span> l'authentification par formulaire de mani&egrave;re programmatique.</p></li><li class="list__item" id="z7gncb6_16"><p id="z7gncb6_22"><span class="control" id="z7gncb6_23">Cr&eacute;er</span> et <span class="control" id="z7gncb6_24">g&eacute;rer</span> des utilisateurs en m&eacute;moire avec <code class="code" id="z7gncb6_25">InMemoryUserDetailsManager</code>.</p></li><li class="list__item" id="z7gncb6_17"><p id="z7gncb6_26"><span class="control" id="z7gncb6_27">Mettre en place</span> une classe de configuration d&eacute;di&eacute;e &agrave; la s&eacute;curit&eacute;.</p></li></ul></section><section class="chapter"><h3 id="introduction-de-la-gu-rite-standard-au-hall-d-accueil-personnalis" data-toc="introduction-de-la-gu-rite-standard-au-hall-d-accueil-personnalis">Introduction : De la Gu&eacute;rite Standard au Hall d'Accueil Personnalis&eacute;</h3><p id="z7gncb6_28">Dans le chapitre pr&eacute;c&eacute;dent, nous avons post&eacute; un garde &agrave; l'entr&eacute;e de notre application. Il fait bien son travail, mais il utilise une gu&eacute;rite standard et une liste de visiteurs griffonn&eacute;e sur un bout de papier. C'est efficace, mais peu professionnel et pas tr&egrave;s flexible.</p><p id="z7gncb6_29">Il est temps de construire un v&eacute;ritable hall d'accueil, aux couleurs de notre application, avec une r&eacute;ceptionniste qui dispose d'un registre officiel des personnes autoris&eacute;es.</p><p id="z7gncb6_30">Ce chapitre vous apprendra &agrave; remplacer le formulaire de connexion g&eacute;n&eacute;rique de Spring Security par le v&ocirc;tre. Plus important encore, nous allons d&eacute;laisser la configuration dans <code class="code" id="z7gncb6_31">application.properties</code> pour une approche beaucoup plus puissante et flexible : la configuration Java. Nous allons apprendre &agrave; d&eacute;finir nos propres utilisateurs, avec leurs mots de passe et leurs r&ocirc;les, directement dans notre code.</p></section><section class="chapter"><h3 id="types-d-authentification" data-toc="types-d-authentification">Types d'authentification</h3><p id="z7gncb6_32">Avant de plonger dans le code, voyons rapidement les m&eacute;thodes d'authentification les plus courantes sur le web.</p><ol class="list _decimal" id="z7gncb6_33" type="1"><li class="list__item" id="z7gncb6_34"><p id="z7gncb6_37"><span class="control" id="z7gncb6_38">Authentification Basique HTTP (Basic Auth)</span>: Le navigateur envoie le nom d'utilisateur et le mot de passe dans les en-t&ecirc;tes de chaque requ&ecirc;te, encod&eacute;s en Base64. C'est simple, mais peu s&eacute;curis&eacute; car les identifiants transitent constamment.</p></li><li class="list__item" id="z7gncb6_35"><p id="z7gncb6_39"><span class="control" id="z7gncb6_40">Authentification par Formulaire (Form-Based)</span>: C'est la m&eacute;thode la plus classique. L'utilisateur saisit ses identifiants dans un formulaire HTML. Le serveur les valide, cr&eacute;e une session et renvoie un cookie de session au navigateur. Le navigateur enverra ce cookie &agrave; chaque requ&ecirc;te suivante pour prouver son identit&eacute;. C'est ce que nous allons mettre en place.</p></li><li class="list__item" id="z7gncb6_36"><p id="z7gncb6_41"><span class="control" id="z7gncb6_42">OAuth 2.0 / OpenID Connect (OIDC)</span>: Plut&ocirc;t que de g&eacute;rer les mots de passe vous-m&ecirc;me, vous d&eacute;l&eacute;guez l'authentification &agrave; un fournisseur d'identit&eacute; (IdP) comme Google, GitHub ou Facebook. Votre application fait confiance &agrave; ce fournisseur. C'est le fameux &quot;Se connecter avec Google&quot;. Nous l'&eacute;tudierons dans le module 2.</p></li></ol></section><section class="chapter"><h3 id="la-configuration-java-prenez-le-contr-le-total" data-toc="la-configuration-java-prenez-le-contr-le-total">La Configuration Java : Prenez le Contr&ocirc;le Total</h3><p id="z7gncb6_43">Pour aller au-del&agrave; de la configuration de base, nous devons cr&eacute;er une classe de configuration Java. C'est la m&eacute;thode standard et recommand&eacute;e pour configurer Spring Security.</p><p id="z7gncb6_44">Cr&eacute;ez une classe <code class="code" id="z7gncb6_50">SecurityConfig</code> dans un nouveau package <code class="code" id="z7gncb6_51">config</code>.</p><p id="z7gncb6_45"><span class="control" id="z7gncb6_52"><code class="code" id="z7gncb6_53">fr/formation/spring/taskmaster/config/SecurityConfig.java</code></span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity // Active la prise en charge de la sécurité web par Spring
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
+        http
+                // Autorise toutes les requêtes à être authentifiées
+                .authorizeHttpRequests(auth -&gt; auth.anyRequest().authenticated())
+                // Configure l'authentification par formulaire
+                .formLogin();
+
+        return http.build();
+    }
+}
+</div><aside class="prompt" data-type="tip" data-title="" id="z7gncb6_47"><p>Pensez &agrave; supprimer les lignes `spring.security.user.*` de votre fichier `application.properties`. D&eacute;sormais, c'est cette classe qui a la priorit&eacute;.</p></aside><p id="z7gncb6_48">D&eacute;cortiquons ce code :</p><ul class="list _bullet" id="z7gncb6_49"><li class="list__item" id="z7gncb6_54"><p id="z7gncb6_59"><code class="code" id="z7gncb6_60">@Configuration</code>: Indique &agrave; Spring que cette classe contient des configurations de beans.</p></li><li class="list__item" id="z7gncb6_55"><p id="z7gncb6_61"><code class="code" id="z7gncb6_62">@EnableWebSecurity</code>: C'est l'annotation magique qui active la configuration de s&eacute;curit&eacute; web de Spring Security.</p></li><li class="list__item" id="z7gncb6_56"><p id="z7gncb6_63"><code class="code" id="z7gncb6_64">@Bean public SecurityFilterChain...</code>: C'est ici que le travail se fait. Nous d&eacute;finissons un bean qui construit la fameuse <span class="control" id="z7gncb6_65">cha&icirc;ne de filtres de s&eacute;curit&eacute;</span>. L'objet <code class="code" id="z7gncb6_66">HttpSecurity</code> est un constructeur (builder) qui nous permet de d&eacute;finir toutes nos r&egrave;gles de s&eacute;curit&eacute; de mani&egrave;re fluide.</p></li><li class="list__item" id="z7gncb6_57"><p id="z7gncb6_67"><code class="code" id="z7gncb6_68">.authorizeHttpRequests(auth -&gt; auth.anyRequest().authenticated())</code>: Nous d&eacute;clarons que pour toute requ&ecirc;te (<code class="code" id="z7gncb6_69">anyRequest</code>), l'utilisateur doit &ecirc;tre authentifi&eacute; (<code class="code" id="z7gncb6_70">authenticated</code>).</p></li><li class="list__item" id="z7gncb6_58"><p id="z7gncb6_71"><code class="code" id="z7gncb6_72">.formLogin()</code>: Nous activons la prise en charge de l'authentification par formulaire, avec les r&eacute;glages par d&eacute;faut ( page de login g&eacute;n&eacute;r&eacute;e, etc.).</p></li></ul></section><section class="chapter"><h3 id="g-rer-les-utilisateurs-en-m-moire" data-toc="g-rer-les-utilisateurs-en-m-moire">G&eacute;rer les utilisateurs en m&eacute;moire</h3><p id="z7gncb6_73">Notre configuration fonctionne, mais o&ugrave; sont les utilisateurs ? Pour l'instant, nulle part ! Nous devons dire &agrave; Spring Security comment trouver les informations des utilisateurs (nom, mot de passe, r&ocirc;les).</p><p id="z7gncb6_74">La m&eacute;thode la plus simple pour le d&eacute;veloppement est d'utiliser <code class="code" id="z7gncb6_80">InMemoryUserDetailsManager</code>. Il s'agit d'un gestionnaire d'utilisateurs qui les stocke... en m&eacute;moire.</p><p id="z7gncb6_75">Ajoutons un bean &agrave; notre <code class="code" id="z7gncb6_81">SecurityConfig</code> pour d&eacute;finir nos utilisateurs.</p><div class="code-block" data-lang="java">
+// Dans la classe SecurityConfig...
+
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+// ...
+
+@Bean
+public UserDetailsService userDetailsService() {
+    // Création d'un utilisateur &quot;user&quot;
+    UserDetails user = User.withDefaultPasswordEncoder() // Méthode dépréciée, pour démo seulement !
+            .username(&quot;user&quot;)
+            .password(&quot;password&quot;)
+            .roles(&quot;USER&quot;)
+            .build();
+
+    // Création d'un utilisateur &quot;admin&quot;
+    UserDetails admin = User.withDefaultPasswordEncoder()
+            .username(&quot;admin&quot;)
+            .password(&quot;password&quot;)
+            .roles(&quot;ADMIN&quot;, &quot;USER&quot;)
+            .build();
+
+    return new InMemoryUserDetailsManager(user, admin);
+}
+</div><aside class="prompt" data-type="warning" data-title="" id="z7gncb6_77"><p>La m&eacute;thode `withDefaultPasswordEncoder()` est **d&eacute;pr&eacute;ci&eacute;e** et **dangereuse**. Elle utilise un encodeur qui ne fait aucun &quot;salage&quot; (salting) et stocke les mots de passe dans un format peu s&eacute;curis&eacute;. Nous l'utilisons ici pour la simplicit&eacute; de la d&eacute;monstration. **Nous la remplacerons par la bonne pratique dans la section &quot;Pour aller plus loin&quot;.**</p></aside><p id="z7gncb6_78">D&eacute;sormais, votre application conna&icirc;t deux utilisateurs : <code class="code" id="z7gncb6_82">user</code> et <code class="code" id="z7gncb6_83">admin</code>. Vous pouvez vous connecter avec l'un ou l'autre en utilisant le mot de passe <code class="code" id="z7gncb6_84">password</code>.</p></section></section><section class="chapter"><h2 id="pour-aller-plus-loin" data-toc="pour-aller-plus-loin">Pour aller plus loin</h2><section class="chapter"><h3 id="cr-ation-d-un-formulaire-de-connexion-personnalis" data-toc="cr-ation-d-un-formulaire-de-connexion-personnalis">Cr&eacute;ation d'un formulaire de connexion personnalis&eacute;</h3><p id="z7gncb6_91">Le formulaire par d&eacute;faut est fonctionnel, mais nous voulons notre propre page.</p><p id="z7gncb6_92"><span class="control" id="z7gncb6_105">&Eacute;tape 1 : Cr&eacute;er un contr&ocirc;leur pour afficher la page de login</span></p><p id="z7gncb6_93">Nous avons besoin d'un endpoint qui renvoie notre fichier HTML. Pour cela, nous devons ajouter la d&eacute;pendance <code class="code" id="z7gncb6_106">spring-boot-starter-thymeleaf</code> &agrave; notre <code class="code" id="z7gncb6_107">pom.xml</code> pour pouvoir servir des pages HTML dynamiques.</p><div class="code-block" data-lang="markup">
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</div><p id="z7gncb6_95"><span class="control" id="z7gncb6_108"><code class="code" id="z7gncb6_109">fr/formation/spring/taskmaster/controller/LoginController.java</code></span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class LoginController {
+
+    @GetMapping(&quot;/login&quot;)
+    public String login() {
+        // Renvoie le nom du fichier HTML (sans l'extension)
+        // qui se trouve dans src/main/resources/templates
+        return &quot;login&quot;;
+    }
+}
+</div><p id="z7gncb6_97"><span class="control" id="z7gncb6_110">&Eacute;tape 2 : Cr&eacute;er la page HTML <code class="code" id="z7gncb6_111">login.html</code></span></p><p id="z7gncb6_98">Cr&eacute;ez le fichier <code class="code" id="z7gncb6_112">src/main/resources/templates/login.html</code>.</p><div class="code-block" data-lang="markup">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Connexion - TaskMaster&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Bienvenue sur TaskMaster&lt;/h1&gt;
+&lt;p&gt;Veuillez vous connecter.&lt;/p&gt;
+
+&lt;!-- Affiche un message d'erreur si la connexion échoue --&gt;
+&lt;div th:if=&quot;${param.error}&quot; style=&quot;color: red;&quot;&gt;
+    Nom d'utilisateur ou mot de passe invalide.
+&lt;/div&gt;
+
+&lt;!-- Le formulaire de connexion --&gt;
+&lt;form th:action=&quot;@{/login}&quot; method=&quot;post&quot;&gt;
+    &lt;div&gt;
+        &lt;label for=&quot;username&quot;&gt;Nom d'utilisateur :&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;username&quot; name=&quot;username&quot; autofocus=&quot;autofocus&quot;/&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+        &lt;label for=&quot;password&quot;&gt;Mot de passe :&lt;/label&gt;
+        &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot;/&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Champ caché pour le token CSRF. TRÈS IMPORTANT ! --&gt;
+    &lt;input type=&quot;hidden&quot;
+           th:name=&quot;${_csrf.parameterName}&quot;
+           th:value=&quot;${_csrf.token}&quot;/&gt;
+
+    &lt;div&gt;
+        &lt;button type=&quot;submit&quot;&gt;Se connecter&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</div><aside class="prompt" data-type="warning" data-title="Ne jamais oublier le token CSRF !" id="z7gncb6_100"><p>Le champ cach&eacute; `_csrf` est absolument crucial. Il contient le token anti-CSRF g&eacute;n&eacute;r&eacute; par Spring Security. Si vous l'omettez, Spring Security rejettera la tentative de connexion avec une erreur 403 (Forbidden), car il la consid&eacute;rera comme une attaque potentielle.</p></aside><p id="z7gncb6_101"><span class="control" id="z7gncb6_113">&Eacute;tape 3 : Dire &agrave; Spring Security d'utiliser notre page</span></p><p id="z7gncb6_102">Modifions notre <code class="code" id="z7gncb6_114">SecurityFilterChain</code> dans <code class="code" id="z7gncb6_115">SecurityConfig.java</code>.</p><div class="code-block" data-lang="java">
+// Dans la méthode securityFilterChain de SecurityConfig
+
+//...
+.formLogin(form -&gt;form
+        .loginPage(&quot;/login&quot;) // URL de notre page de connexion
+        .permitAll()         // Tout le monde peut voir la page de connexion
+);
+//...
+</div><p id="z7gncb6_104">Relancez l'application. Maintenant, lorsque vous acc&eacute;derez &agrave; une page prot&eacute;g&eacute;e, vous serez redirig&eacute; vers votre belle page de connexion personnalis&eacute;e !</p></section><section class="chapter"><h3 id="le-passwordencoder-la-bonne-fa-on-de-g-rer-les-mots-de-passe" data-toc="le-passwordencoder-la-bonne-fa-on-de-g-rer-les-mots-de-passe">Le <code class="code" id="z7gncb6_127">PasswordEncoder</code>: La bonne fa&ccedil;on de g&eacute;rer les mots de passe</h3><p id="z7gncb6_117">Comme nous l'avons dit, stocker les mots de passe avec <code class="code" id="z7gncb6_128">withDefaultPasswordEncoder</code> n'est pas s&ucirc;r. Nous devons utiliser un algorithme de hachage fort et adaptatif comme <span class="control" id="z7gncb6_129">BCrypt</span>.</p><p id="z7gncb6_118">Le principe du hachage est simple : c'est une fonction &agrave; sens unique. Il est facile de transformer <code class="code" id="z7gncb6_130">password123</code> en sa version hach&eacute;e, mais quasiment impossible de faire l'inverse.</p><p id="z7gncb6_119"><span class="control" id="z7gncb6_131">&Eacute;tape 1 : Cr&eacute;er un bean <code class="code" id="z7gncb6_132">PasswordEncoder</code></span></p><p id="z7gncb6_120">Dans <code class="code" id="z7gncb6_133">SecurityConfig.java</code>, ajoutez ce bean :</p><div class="code-block" data-lang="java">
+// Dans SecurityConfig.java
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+// ...
+
+@Bean
+public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+}
+</div><p id="z7gncb6_122"><span class="control" id="z7gncb6_134">&Eacute;tape 2 : Utiliser le <code class="code" id="z7gncb6_135">PasswordEncoder</code> pour cr&eacute;er les utilisateurs</span></p><p id="z7gncb6_123">Maintenant, nous allons modifier notre bean <code class="code" id="z7gncb6_136">UserDetailsService</code> pour qu'il utilise notre <code class="code" id="z7gncb6_137">PasswordEncoder</code>.</p><div class="code-block" data-lang="java">
+// Dans SecurityConfig.java
+
+@Bean
+public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+    UserDetails user = User.builder()
+            .username(&quot;user&quot;)
+            // On encode le mot de passe avant de le stocker en mémoire
+            .password(encoder.encode(&quot;password&quot;))
+            .roles(&quot;USER&quot;)
+            .build();
+
+    UserDetails admin = User.builder()
+            .username(&quot;admin&quot;)
+            .password(encoder.encode(&quot;password&quot;))
+            .roles(&quot;ADMIN&quot;, &quot;USER&quot;)
+            .build();
+
+    return new InMemoryUserDetailsManager(user, admin);
+}
+</div><p id="z7gncb6_125"><code class="code" id="z7gncb6_138">User.builder()</code> est la nouvelle fa&ccedil;on de construire un <code class="code" id="z7gncb6_139">UserDetails</code>. Spring injectera automatiquement le bean <code class="code" id="z7gncb6_140">PasswordEncoder</code> que nous venons de d&eacute;finir.</p><p id="z7gncb6_126">Votre gestion des mots de passe est maintenant beaucoup plus s&eacute;curis&eacute;e !</p></section><section class="chapter"><h3 id="exercice-3-configuration-compl-te-de-l-authentification" data-toc="exercice-3-configuration-compl-te-de-l-authentification">Exercice 3 : Configuration compl&egrave;te de l'authentification</h3><section class="procedure-steps"><h3 id="exercice-1-3" data-toc="exercice-1-3">Mise en place de l'authentification personnalisée pour TaskMaster</h3><p id="z7gncb6_142">En vous basant sur le projet <b id="z7gncb6_144">TaskMaster</b>, r&eacute;alisez les &eacute;tapes suivantes :</p><ol class="list _decimal" id="z7gncb6_143" type="1"><li class="list__item" id="z7gncb6_145"><p>Si ce n'est pas d&eacute;j&agrave; fait, cr&eacute;ez la classe <code class="code" id="z7gncb6_150">SecurityConfig</code> dans <code class="code" id="z7gncb6_151">fr.formation.spring.taskmaster.config</code>.</p></li><li class="list__item" id="z7gncb6_146"><p>Dans cette classe, d&eacute;finissez un bean <code class="code" id="z7gncb6_152">SecurityFilterChain</code>. Il doit : </p><ul class="list _bullet" id="z7gncb6_153"><li class="list__item" id="z7gncb6_154"><p>Prot&eacute;ger tous les endpoints sauf la page de login.</p></li><li class="list__item" id="z7gncb6_155"><p>Utiliser une page de login personnalis&eacute;e &agrave; l'URL <code class="code" id="z7gncb6_158">/connexion</code>.</p></li><li class="list__item" id="z7gncb6_156"><p>Apr&egrave;s une connexion r&eacute;ussie, rediriger l'utilisateur vers <code class="code" id="z7gncb6_159">/api/projects</code>.</p></li><li class="list__item" id="z7gncb6_157"><p>Permettre &agrave; tout le monde d'acc&eacute;der &agrave; l'URL <code class="code" id="z7gncb6_160">/connexion</code>.</p></li></ul></li><li class="list__item" id="z7gncb6_147"><p>Cr&eacute;ez un bean <code class="code" id="z7gncb6_161">PasswordEncoder</code> qui utilise <code class="code" id="z7gncb6_162">BCryptPasswordEncoder</code>.</p></li><li class="list__item" id="z7gncb6_148"><p>Cr&eacute;ez un bean <code class="code" id="z7gncb6_163">UserDetailsService</code> qui utilise <code class="code" id="z7gncb6_164">InMemoryUserDetailsManager</code>. Il doit d&eacute;finir deux utilisateurs : </p><ul class="list _bullet" id="z7gncb6_165"><li class="list__item" id="z7gncb6_167"><p><code class="code" id="z7gncb6_169">john.doe</code> avec le mot de passe <code class="code" id="z7gncb6_170">pass1</code> et le r&ocirc;le <code class="code" id="z7gncb6_171">USER</code>.</p></li><li class="list__item" id="z7gncb6_168"><p><code class="code" id="z7gncb6_172">jane.smith</code> avec le mot de passe <code class="code" id="z7gncb6_173">pass2</code> et le r&ocirc;le <code class="code" id="z7gncb6_174">ADMIN</code>.</p></li></ul><p> Utilisez bien le <code class="code" id="z7gncb6_166">PasswordEncoder</code> pour chiffrer les mots de passe.</p></li><li class="list__item" id="z7gncb6_149"><p>Cr&eacute;ez un <code class="code" id="z7gncb6_175">LoginController</code> et une page <code class="code" id="z7gncb6_176">connexion.html</code> (dans <code class="code" id="z7gncb6_177">templates</code>) pour servir le formulaire &agrave; l'URL <code class="code" id="z7gncb6_178">/connexion</code>. N'oubliez pas le token CSRF et de faire pointer l'action du formulaire vers la bonne URL (celle que Spring Security attend, c'est-&agrave;-dire <code class="code" id="z7gncb6_179">/connexion</code>).</p></li></ol><ol class="list _decimal"></ol></section></section><section class="chapter"><div class="collapse"><div class="collapse__title"><h3 id="correction-exercice-3" data-toc="correction-exercice-3">Correction exercice 3</h3></div><div class="collapse__content"><p id="z7gncb6_180">Voici les fichiers de code qui permettent de r&eacute;soudre l'exercice.</p><p id="z7gncb6_181"><span class="control" id="z7gncb6_190">1. <code class="code" id="z7gncb6_191">pom.xml</code> (s'assurer que <code class="code" id="z7gncb6_192">thymeleaf</code> est pr&eacute;sent)</span></p><div class="code-block" data-lang="markup">
+&lt;!-- ... autres dépendances ... --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</div><p id="z7gncb6_183"><span class="control" id="z7gncb6_193">2. <code class="code" id="z7gncb6_194">fr/formation/spring/taskmaster/config/SecurityConfig.java</code></span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
+        http
+                .authorizeHttpRequests(auth -&gt; auth
+                        // Autorise l'accès à la page de connexion pour tout le monde
+                        .requestMatchers(&quot;/connexion&quot;).permitAll()
+                        // Exige une authentification pour toutes les autres requêtes
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -&gt; form
+                        // URL de notre page de connexion personnalisée
+                        .loginPage(&quot;/connexion&quot;)
+                        // URL où le formulaire de connexion sera soumis (doit être POST)
+                        .loginProcessingUrl(&quot;/connexion&quot;)
+                        // URL de redirection après une connexion réussie
+                        .defaultSuccessUrl(&quot;/api/projects&quot;, true)
+                        .permitAll()
+                );
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+        UserDetails user = User.builder()
+                .username(&quot;john.doe&quot;)
+                .password(encoder.encode(&quot;pass1&quot;))
+                .roles(&quot;USER&quot;)
+                .build();
+
+        UserDetails admin = User.builder()
+                .username(&quot;jane.smith&quot;)
+                .password(encoder.encode(&quot;pass2&quot;))
+                .roles(&quot;ADMIN&quot;)
+                .build();
+
+        return new InMemoryUserDetailsManager(user, admin);
+    }
+}
+</div><style>.theme-dark .plantuml > svg {filter: hue-rotate(180deg) invert(0.9);}div.plantuml {overflow-x: auto;}</style><div class="plantuml"><?xml version="1.0" encoding="us-ascii" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="451px" preserveAspectRatio="none" style="width:795px;height:451px;background:#FFFFFF;" version="1.1" viewBox="0 0 795 451" width="795px" zoomAndPan="magnify"><defs/><g><!--cluster Configuration--><g id="cluster_Configuration"><path d="M345.5,6 L444.5,6 A5.25,5.25 0 0 1 448,9.5 L455,28.4883 L784.5,28.4883 A3.5,3.5 0 0 1 788,31.9883 L788,150.96 A3.5,3.5 0 0 1 784.5,154.46 L345.5,154.46 A3.5,3.5 0 0 1 342,150.96 L342,9.5 A3.5,3.5 0 0 1 345.5,6 " fill="none" style="stroke:#696969;stroke-width:1.0;"/><line style="stroke:#696969;stroke-width:1.0;" x1="342" x2="455" y1="28.4883" y2="28.4883"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="100" x="346" y="21.5352">Configuration</text></g><!--cluster Framework Spring Security--><g id="cluster_Framework Spring Security"><path d="M9.5,203.46 L201.5,203.46 A5.25,5.25 0 0 1 205,206.96 L212,225.9483 L608.5,225.9483 A3.5,3.5 0 0 1 612,229.4483 L612,440.94 A3.5,3.5 0 0 1 608.5,444.44 L9.5,444.44 A3.5,3.5 0 0 1 6,440.94 L6,206.96 A3.5,3.5 0 0 1 9.5,203.46 " fill="none" style="stroke:#696969;stroke-width:1.0;"/><line style="stroke:#696969;stroke-width:1.0;" x1="6" x2="212" y1="225.9483" y2="225.9483"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="193" x="10" y="218.9952">Framework Spring Security</text></g><!--class SecurityConfig--><g id="elem_SecurityConfig"><rect codeLine="4" fill="#F1F1F1" height="97.4648" id="SecurityConfig" rx="3.5" ry="3.5" style="stroke:#181818;stroke-width:0.5;" width="414" x="358" y="41"/><ellipse cx="510.75" cy="57" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M513.7231,62.6431 Q513.1421,62.9419 512.5029,63.0913 Q511.8638,63.2407 511.1582,63.2407 Q508.6514,63.2407 507.3315,61.5889 Q506.0117,59.937 506.0117,56.8159 Q506.0117,53.6865 507.3315,52.0347 Q508.6514,50.3828 511.1582,50.3828 Q511.8638,50.3828 512.5112,50.5322 Q513.1587,50.6816 513.7231,50.9805 L513.7231,53.7031 Q513.0923,53.1221 512.4988,52.8523 Q511.9053,52.5825 511.2744,52.5825 Q509.9297,52.5825 509.2449,53.6492 Q508.5601,54.7158 508.5601,56.8159 Q508.5601,58.9077 509.2449,59.9744 Q509.9297,61.041 511.2744,61.041 Q511.9053,61.041 512.4988,60.7712 Q513.0923,60.5015 513.7231,59.9204 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="531.25" y="62.291">SecurityConfig</text><line style="stroke:#181818;stroke-width:0.5;" x1="359" x2="771" y1="73" y2="73"/><line style="stroke:#181818;stroke-width:0.5;" x1="359" x2="771" y1="81" y2="81"/><ellipse cx="369" cy="94.7441" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="358" x="378" y="98.5352">securityFilterChain(HttpSecurity): SecurityFilterChain</text><ellipse cx="369" cy="111.2324" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="261" x="378" y="115.0234">passwordEncoder(): PasswordEncoder</text><ellipse cx="369" cy="127.7207" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="388" x="378" y="131.5117">userDetailsService(PasswordEncoder): UserDetailsService</text></g><!--class HttpSecurity--><g id="elem_HttpSecurity"><rect codeLine="11" fill="#F1F1F1" height="80.9766" id="HttpSecurity" rx="3.5" ry="3.5" style="stroke:#181818;stroke-width:0.5;" width="193" x="22.5" y="238.46"/><ellipse cx="73.25" cy="254.46" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M76.2231,260.1031 Q75.6421,260.4019 75.0029,260.5513 Q74.3638,260.7007 73.6582,260.7007 Q71.1514,260.7007 69.8315,259.0489 Q68.5117,257.397 68.5117,254.2759 Q68.5117,251.1465 69.8315,249.4947 Q71.1514,247.8428 73.6582,247.8428 Q74.3638,247.8428 75.0112,247.9922 Q75.6587,248.1416 76.2231,248.4405 L76.2231,251.1631 Q75.5923,250.5821 74.9988,250.3123 Q74.4053,250.0425 73.7744,250.0425 Q72.4297,250.0425 71.7449,251.1092 Q71.0601,252.1758 71.0601,254.2759 Q71.0601,256.3677 71.7449,257.4344 Q72.4297,258.501 73.7744,258.501 Q74.4053,258.501 74.9988,258.2312 Q75.5923,257.9615 76.2231,257.3804 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="83" x="93.75" y="259.751">HttpSecurity</text><line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="214.5" y1="270.46" y2="270.46"/><line style="stroke:#181818;stroke-width:0.5;" x1="23.5" x2="214.5" y1="278.46" y2="278.46"/><ellipse cx="33.5" cy="292.2041" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="167" x="42.5" y="295.9952">authorizeHttpRequests()</text><ellipse cx="33.5" cy="308.6924" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81" x="42.5" y="312.4834">formLogin()</text></g><!--class PasswordEncoder--><g id="elem_PasswordEncoder"><rect codeLine="15" fill="#F1F1F1" height="48" id="PasswordEncoder" rx="3.5" ry="3.5" style="stroke:#181818;stroke-width:0.5;" width="153" x="250.5" y="254.95"/><ellipse cx="265.5" cy="270.95" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M261.4277,266.7151 L261.4277,264.5569 L268.8071,264.5569 L268.8071,266.7151 L266.3418,266.7151 L266.3418,274.7918 L268.8071,274.7918 L268.8071,276.95 L261.4277,276.95 L261.4277,274.7918 L263.8931,274.7918 L263.8931,266.7151 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="121" x="279.5" y="276.241">PasswordEncoder</text><line style="stroke:#181818;stroke-width:0.5;" x1="251.5" x2="402.5" y1="286.95" y2="286.95"/><line style="stroke:#181818;stroke-width:0.5;" x1="251.5" x2="402.5" y1="294.95" y2="294.95"/></g><!--class BCryptPasswordEncoder--><g id="elem_BCryptPasswordEncoder"><rect codeLine="16" fill="#F1F1F1" height="48" id="BCryptPasswordEncoder" rx="3.5" ry="3.5" style="stroke:#181818;stroke-width:0.5;" width="198" x="125" y="380.44"/><ellipse cx="140" cy="396.44" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M142.9731,402.0831 Q142.3921,402.3819 141.7529,402.5313 Q141.1138,402.6807 140.4082,402.6807 Q137.9014,402.6807 136.5815,401.0289 Q135.2617,399.377 135.2617,396.2559 Q135.2617,393.1265 136.5815,391.4747 Q137.9014,389.8228 140.4082,389.8228 Q141.1138,389.8228 141.7612,389.9722 Q142.4087,390.1216 142.9731,390.4205 L142.9731,393.1431 Q142.3423,392.5621 141.7488,392.2923 Q141.1553,392.0225 140.5244,392.0225 Q139.1797,392.0225 138.4949,393.0892 Q137.8101,394.1558 137.8101,396.2559 Q137.8101,398.3477 138.4949,399.4144 Q139.1797,400.481 140.5244,400.481 Q141.1553,400.481 141.7488,400.2112 Q142.3423,399.9415 142.9731,399.3604 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="166" x="154" y="401.731">BCryptPasswordEncoder</text><line style="stroke:#181818;stroke-width:0.5;" x1="126" x2="322" y1="412.44" y2="412.44"/><line style="stroke:#181818;stroke-width:0.5;" x1="126" x2="322" y1="420.44" y2="420.44"/></g><!--class UserDetailsService--><g id="elem_UserDetailsService"><rect codeLine="17" fill="#F1F1F1" height="48" id="UserDetailsService" rx="3.5" ry="3.5" style="stroke:#181818;stroke-width:0.5;" width="157" x="438.5" y="254.95"/><ellipse cx="453.5" cy="270.95" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M449.4277,266.7151 L449.4277,264.5569 L456.8071,264.5569 L456.8071,266.7151 L454.3418,266.7151 L454.3418,274.7918 L456.8071,274.7918 L456.8071,276.95 L449.4277,276.95 L449.4277,274.7918 L451.8931,274.7918 L451.8931,266.7151 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="125" x="467.5" y="276.241">UserDetailsService</text><line style="stroke:#181818;stroke-width:0.5;" x1="439.5" x2="594.5" y1="286.95" y2="286.95"/><line style="stroke:#181818;stroke-width:0.5;" x1="439.5" x2="594.5" y1="294.95" y2="294.95"/></g><!--class InMemoryUserDetailsManager--><g id="elem_InMemoryUserDetailsManager"><rect codeLine="18" fill="#F1F1F1" height="48" id="InMemoryUserDetailsManager" rx="3.5" ry="3.5" style="stroke:#181818;stroke-width:0.5;" width="237" x="358.5" y="380.44"/><ellipse cx="373.5" cy="396.44" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M376.4731,402.0831 Q375.8921,402.3819 375.2529,402.5313 Q374.6138,402.6807 373.9082,402.6807 Q371.4014,402.6807 370.0815,401.0289 Q368.7617,399.377 368.7617,396.2559 Q368.7617,393.1265 370.0815,391.4747 Q371.4014,389.8228 373.9082,389.8228 Q374.6138,389.8228 375.2612,389.9722 Q375.9087,390.1216 376.4731,390.4205 L376.4731,393.1431 Q375.8423,392.5621 375.2488,392.2923 Q374.6553,392.0225 374.0244,392.0225 Q372.6797,392.0225 371.9949,393.0892 Q371.3101,394.1558 371.3101,396.2559 Q371.3101,398.3477 371.9949,399.4144 Q372.6797,400.481 374.0244,400.481 Q374.6553,400.481 375.2488,400.2112 Q375.8423,399.9415 376.4731,399.3604 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="205" x="387.5" y="401.731">InMemoryUserDetailsManager</text><line style="stroke:#181818;stroke-width:0.5;" x1="359.5" x2="594.5" y1="412.44" y2="412.44"/><line style="stroke:#181818;stroke-width:0.5;" x1="359.5" x2="594.5" y1="420.44" y2="420.44"/></g><!--reverse link PasswordEncoder to BCryptPasswordEncoder--><g id="link_PasswordEncoder_BCryptPasswordEncoder"><path d="M296.0993,317.0018 C277.6793,339.0818 261.67,358.27 243.29,380.32 " fill="none" id="PasswordEncoder-backto-BCryptPasswordEncoder" style="stroke:#454645;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="307.63,303.18,291.492,313.1583,300.7066,320.8454,307.63,303.18" style="stroke:#454645;stroke-width:1.0;"/></g><!--reverse link UserDetailsService to InMemoryUserDetailsManager--><g id="link_UserDetailsService_InMemoryUserDetailsManager"><path d="M503.9277,320.3023 C496.7677,342.3823 491.63,358.27 484.49,380.32 " fill="none" id="UserDetailsService-backto-InMemoryUserDetailsManager" style="stroke:#454645;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="509.48,303.18,498.2203,318.4515,509.6351,322.153,509.48,303.18" style="stroke:#454645;stroke-width:1.0;"/></g><!--link SecurityConfig to HttpSecurity--><g id="link_SecurityConfig_HttpSecurity"><path codeLine="21" d="M376.03,138.83 C328.17,154.11 277.68,172.99 233,195.46 C209.87,207.1 191.1159,219.6081 171.4959,234.5281 " fill="none" id="SecurityConfig-to-HttpSecurity" style="stroke:#454645;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#454645" points="166.72,238.16,176.3051,235.8962,170.7,235.1335,171.4627,229.5283,166.72,238.16" style="stroke:#454645;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="39" x="285.73" y="184.0284">utilise</text></g><!--link SecurityConfig to BCryptPasswordEncoder--><g id="link_SecurityConfig_BCryptPasswordEncoder"><path codeLine="22" d="M595.59,138.51 C623.53,188.85 654.66,267.82 613,319.44 C608.37,325.18 442.7411,359.4416 329.0211,382.4216 " fill="none" id="SecurityConfig-to-BCryptPasswordEncoder" style="stroke:#454645;stroke-width:1.0;"/><polygon fill="#454645" points="323.14,383.61,332.754,385.7481,328.0409,382.6196,331.1694,377.9066,323.14,383.61" style="stroke:#454645;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="26" x="634.25" y="284.0184">cr&#233;e</text></g><!--link SecurityConfig to PasswordEncoder--><g id="link_SecurityConfig_PasswordEncoder"><path codeLine="23" d="M496.28,138.76 C472.12,156.15 445.02,176.25 421,195.46 C397.09,214.58 375.4442,233.629 356.8342,250.509 " fill="none" id="SecurityConfig-to-PasswordEncoder" style="stroke:#454645;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#454645" points="352.39,254.54,361.7436,251.4562,356.0935,251.1808,356.3689,245.5307,352.39,254.54" style="stroke:#454645;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="42" x="452.81" y="184.0284">injecte</text></g><!--link SecurityConfig to InMemoryUserDetailsManager--><g id="link_SecurityConfig_InMemoryUserDetailsManager"><path codeLine="24" d="M657.39,138.76 C670.11,148.08 682.16,158.67 692,170.46 C726.52,211.84 705.34,298.19 702,319.44 C699.75,333.74 702.59,340.57 692,350.44 C676.99,364.43 642.9817,374.7358 601.5917,383.4358 " fill="none" id="SecurityConfig-to-InMemoryUserDetailsManager" style="stroke:#454645;stroke-width:1.0;"/><polygon fill="#454645" points="595.72,384.67,605.3503,386.7332,600.6131,383.6415,603.7047,378.9042,595.72,384.67" style="stroke:#454645;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="26" x="712.48" y="284.0184">cr&#233;e</text></g><!--SRC=[VP51JiCm44NtESNGLIhK7g2BBWXK85494N40uqwJeOaTnfEYW7eWpi75C4r8apImzRp_ny- -a1HpX3qzip8I54hlL88mYQpPKbAo4h9c0Xy1WCwKSn2ZBfcage7Z0E0IN7EyeaoGerIH2Mz5YbzykcYJ7QG95xxupVBcncYxGGuz_D0_Qi3I8L-ZACfSZBmdZU40zD6dCyYd3y7X9BTYbQCFxI0kc4pINgqhshrzgwbAIItJE_vC7_6rH2Skd3RJhUNytYPUVNfS2K36gswLnX6XUirLn5KXWobGNcJ-NuouaU2fT5IrxhqpQymjLnrahOpNxvMF51o2OF37y_co_neBA8KoSZWaPxFb7q8BqFprYMFLvoYP5zGoslwFLhFY6m00]--></g></svg></div><p id="z7gncb6_186"><span class="control" id="z7gncb6_195">3. <code class="code" id="z7gncb6_196">fr/formation/spring/taskmaster/controller/LoginController.java</code></span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class LoginController {
+
+    @GetMapping(&quot;/connexion&quot;)
+    public String loginPage() {
+        return &quot;connexion&quot;; // Renvoie connexion.html
+    }
+}
+</div><p id="z7gncb6_188"><span class="control" id="z7gncb6_197">4. <code class="code" id="z7gncb6_198">src/main/resources/templates/connexion.html</code></span></p><div class="code-block" data-lang="markup">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;fr&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Connexion - TaskMaster&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Connexion à TaskMaster&lt;/h1&gt;
+
+&lt;div th:if=&quot;${param.error}&quot; style=&quot;color: red;&quot;&gt;
+    Identifiants incorrects.
+&lt;/div&gt;
+
+&lt;!-- L'action doit correspondre au loginProcessingUrl --&gt;
+&lt;form th:action=&quot;@{/connexion}&quot; method=&quot;post&quot;&gt;
+    &lt;div&gt;
+        &lt;label for=&quot;username&quot;&gt;Utilisateur :&lt;/label&gt;
+        &lt;input type=&quot;text&quot; id=&quot;username&quot; name=&quot;username&quot;/&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+        &lt;label for=&quot;password&quot;&gt;Mot de passe :&lt;/label&gt;
+        &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot;/&gt;
+    &lt;/div&gt;
+
+    &lt;input type=&quot;hidden&quot;
+           th:name=&quot;${_csrf.parameterName}&quot;
+           th:value=&quot;${_csrf.token}&quot;/&gt;
+
+    &lt;div&gt;
+        &lt;button type=&quot;submit&quot;&gt;Connexion&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</div></div></div></section><section class="chapter"><h3 id="auto-valuation" data-toc="auto-valuation">Auto-&eacute;valuation</h3><ol class="list _decimal" id="z7gncb6_199" type="1"><li class="list__item" id="z7gncb6_200"><p id="z7gncb6_205"><span class="control" id="z7gncb6_206">Question ouverte :</span> Pourquoi est-il pr&eacute;f&eacute;rable d'utiliser une classe de configuration Java (<code class="code" id="z7gncb6_207">@Configuration</code>) plut&ocirc;t que le fichier <code class="code" id="z7gncb6_208">application.properties</code> pour configurer Spring Security de mani&egrave;re d&eacute;taill&eacute;e ?</p></li><li class="list__item" id="z7gncb6_201"><p id="z7gncb6_209"><span class="control" id="z7gncb6_211">QCM :</span> Quelle annotation est essentielle pour activer la configuration de la s&eacute;curit&eacute; web de Spring dans une classe de configuration ?</p><ul class="list _bullet" id="z7gncb6_210"><li class="list__item" id="z7gncb6_212"><p id="z7gncb6_216">a) <code class="code" id="z7gncb6_217">@Component</code></p></li><li class="list__item" id="z7gncb6_213"><p id="z7gncb6_218">b) <code class="code" id="z7gncb6_219">@EnableWeb</code></p></li><li class="list__item" id="z7gncb6_214"><p id="z7gncb6_220">c) <code class="code" id="z7gncb6_221">@EnableWebSecurity</code></p></li><li class="list__item" id="z7gncb6_215"><p id="z7gncb6_222">d) <code class="code" id="z7gncb6_223">@EnableSecurity</code></p></li></ul></li><li class="list__item" id="z7gncb6_202"><p id="z7gncb6_224"><span class="control" id="z7gncb6_226">QCM :</span> Dans un formulaire de connexion HTML personnalis&eacute; utilis&eacute; avec Spring Security et Thymeleaf, que fait <code class="code" id="z7gncb6_227">th:name=&quot;${_csrf.parameterName}&quot;</code>?</p><ul class="list _bullet" id="z7gncb6_225"><li class="list__item" id="z7gncb6_228"><p id="z7gncb6_232">a) Il cr&eacute;e un champ pour un code captcha.</p></li><li class="list__item" id="z7gncb6_229"><p id="z7gncb6_233">b) Il ajoute le nom du champ attendu par Spring Security pour le token CSRF.</p></li><li class="list__item" id="z7gncb6_230"><p id="z7gncb6_234">c) Il d&eacute;finit le nom d'utilisateur.</p></li><li class="list__item" id="z7gncb6_231"><p id="z7gncb6_235">d) C'est une balise optionnelle pour le style.</p></li></ul></li><li class="list__item" id="z7gncb6_203"><p id="z7gncb6_236"><span class="control" id="z7gncb6_237">Question ouverte :</span> Expliquez pourquoi BCrypt est un meilleur choix pour le stockage de mots de passe que le hachage simple comme SHA-256.</p></li><li class="list__item" id="z7gncb6_204"><p id="z7gncb6_238"><span class="control" id="z7gncb6_240">QCM :</span> Quel bean est responsable de fournir les informations d'un utilisateur (mot de passe, r&ocirc;les) &agrave; partir de son nom d'utilisateur ?</p><ul class="list _bullet" id="z7gncb6_239"><li class="list__item" id="z7gncb6_241"><p id="z7gncb6_245">a) <code class="code" id="z7gncb6_246">PasswordEncoder</code></p></li><li class="list__item" id="z7gncb6_242"><p id="z7gncb6_247">b) <code class="code" id="z7gncb6_248">SecurityFilterChain</code></p></li><li class="list__item" id="z7gncb6_243"><p id="z7gncb6_249">c) <code class="code" id="z7gncb6_250">UserDetailsService</code></p></li><li class="list__item" id="z7gncb6_244"><p id="z7gncb6_251">d) <code class="code" id="z7gncb6_252">HttpSecurity</code></p></li></ul></li></ol></section><section class="chapter"><h3 id="conclusion" data-toc="conclusion">Conclusion</h3><p id="z7gncb6_253">F&eacute;licitations, vous avez fait un bond de g&eacute;ant ! Vous &ecirc;tes pass&eacute; d'une configuration par d&eacute;faut &agrave; une solution d' authentification enti&egrave;rement personnalis&eacute;e et bien plus s&eacute;curis&eacute;e.</p><p id="z7gncb6_254">Vous savez maintenant comment :</p><ul class="list _bullet" id="z7gncb6_255"><li class="list__item" id="z7gncb6_257"><p id="z7gncb6_261">Prendre le contr&ocirc;le total de la s&eacute;curit&eacute; avec une classe de configuration Java.</p></li><li class="list__item" id="z7gncb6_258"><p id="z7gncb6_262">Cr&eacute;er votre propre page de connexion.</p></li><li class="list__item" id="z7gncb6_259"><p id="z7gncb6_263">G&eacute;rer des utilisateurs en m&eacute;moire.</p></li><li class="list__item" id="z7gncb6_260"><p id="z7gncb6_264">Et surtout, vous avez impl&eacute;ment&eacute; la pratique <span class="control" id="z7gncb6_265">essentielle</span> du hachage de mot de passe avec <code class="code" id="z7gncb6_266">BCryptPasswordEncoder</code>.</p></li></ul><p id="z7gncb6_256">Maintenant que notre application est capable de r&eacute;pondre &agrave; la question &quot; <span class="control" id="z7gncb6_267">Qui &ecirc;tes-vous ?</span> &quot; (l'authentification), il est temps de r&eacute;pondre &agrave; la question suivante : &quot; <span class="control" id="z7gncb6_268">Qu'avez-vous le droit de faire ?</span> &quot;. Le prochain chapitre nous plongera dans le monde de l' <span class="control" id="z7gncb6_269">autorisation</span>. Nous apprendrons &agrave; restreindre l'acc&egrave;s &agrave; certaines parties de notre application en fonction des r&ocirc;les des utilisateurs.</p></section></section><div class="last-modified">14 juin 2025</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom"><a href="002-00-spring-security-install.html" class="navigation-links__prev">Module 1 / Chapitre 2 : Installation et Configuration de Base</a><a href="004-00-access-control.html" class="navigation-links__next">Module 1 / Chapitre 4 : Autorisation &ndash; Contr&ocirc;le d'Acc&egrave;s</a></div></article><div id="disqus_thread"></div></div></section></main></div><script src="https://resources.jetbrains.com/writerside/apidoc/6.22.0-b776/app.js"></script></body></html>

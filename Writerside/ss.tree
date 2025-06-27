@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="ss"
+                 name="Spring Security"
+                 start-page="Default-topic.md">
+
+    <toc-element topic="Default-topic.md">
+    </toc-element>
+    <toc-element topic="002-00-spring-security-install.md"/>
+    <toc-element topic="003-00-authentication.md"/>
+    <toc-element topic="004-00-access-control.md"/>
+    <toc-element topic="005-00-csrf.md"/>
+    <toc-element topic="006-00-user-in-database.md"/>
+    <toc-element topic="007-00-custom-auth.md"/>
+    <toc-element topic="008-00-jwt.md"/>
+    <toc-element topic="009-00-conclusion.md"/>
+</instance-profile>

@@ -1,0 +1,315 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en-US" data-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><meta name="built-on" content="2025-06-27T16:32:46.179699"><title>Module 2 / Chapitre 7 : Personnalisation de l'Authentification | Spring Security</title><script type="application/json" id="virtual-toc-data">[{"id":"l-essentiel","level":0,"title":"L\u0027essentiel","anchor":"#l-essentiel"},{"id":"pour-aller-plus-loin","level":0,"title":"Pour aller plus loin","anchor":"#pour-aller-plus-loin"}]</script><script type="application/json" id="topic-shortcuts"></script><link href="https://resources.jetbrains.com/writerside/apidoc/6.22.0-b776/app.css" rel="stylesheet"><meta name="msapplication-TileColor" content="#000000"><link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"><meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Module 2 / Chapitre 7 : Personnalisation de l'Authentification | Spring Security"><meta property="og:description" content=""><meta property="og:image" content=""><meta property="og:site_name" content="Spring Security Help"><meta property="og:type" content="website"><meta property="og:locale" content="en_US"><meta property="og:url" content="writerside-documentation/007-00-custom-auth.html"><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Module 2 / Chapitre 7 : Personnalisation de l'Authentification | Spring Security"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "WebPage",
+    "@id": "writerside-documentation/007-00-custom-auth.html#webpage",
+    "url": "writerside-documentation/007-00-custom-auth.html",
+    "name": "Module 2 / Chapitre 7 : Personnalisation de l'Authentification | Spring Security",
+    "description": "",
+    "image": "",
+    "inLanguage":"en-US"
+}</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json">{
+    "@type": "WebSite",
+    "@id": "writerside-documentation/#website",
+    "url": "writerside-documentation/",
+    "name": "Spring Security Help"
+}</script><!-- End Schema.org --></head><body data-id="007-00-custom-auth" data-main-title="Module 2 / Chapitre 7 : Personnalisation de l'Authentification" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}" data-template="article" data-breadcrumbs=""><div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Spring Security  Help</h3><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="007-00-custom-auth" id="007-00-custom-auth.md">Module 2 / Chapitre 7 : Personnalisation de l'Authentification</h1><section class="chapter"><h2 id="l-essentiel" data-toc="l-essentiel">L'essentiel</h2><section class="chapter"><h3 id="objectifs-p-dagogiques" data-toc="objectifs-p-dagogiques">Objectifs p&eacute;dagogiques</h3><p id="mfxt7k_10">&Agrave; la fin de ce chapitre, vous serez capable de :</p><ul class="list _bullet" id="mfxt7k_11"><li class="list__item" id="mfxt7k_12"><p id="mfxt7k_16"><span class="control" id="mfxt7k_17">D&eacute;crire</span> le r&ocirc;le de <code class="code" id="mfxt7k_18">AuthenticationManager</code>, <code class="code" id="mfxt7k_19">AuthenticationProvider</code> et <code class="code" id="mfxt7k_20">Authentication</code>.</p></li><li class="list__item" id="mfxt7k_13"><p id="mfxt7k_21"><span class="control" id="mfxt7k_22">Comprendre</span> le flux d'une tentative d'authentification &agrave; travers ces composants.</p></li><li class="list__item" id="mfxt7k_14"><p id="mfxt7k_23"><span class="control" id="mfxt7k_24">Impl&eacute;menter</span> un <code class="code" id="mfxt7k_25">AuthenticationProvider</code> personnalis&eacute; pour g&eacute;rer une logique d'authentification sp&eacute;cifique.</p></li><li class="list__item" id="mfxt7k_15"><p id="mfxt7k_26"><span class="control" id="mfxt7k_27">G&eacute;rer</span> plus finement les erreurs d'authentification et les redirections.</p></li></ul></section><section class="chapter"><h3 id="introduction-la-logique-sur-mesure-du-videur" data-toc="introduction-la-logique-sur-mesure-du-videur">Introduction : La Logique sur Mesure du Videur</h3><p id="mfxt7k_28">Jusqu'&agrave; pr&eacute;sent, nous avons utilis&eacute; les m&eacute;canismes d'authentification standard de Spring Security. C'est comme si nous avions engag&eacute; un videur de bo&icirc;te de nuit qui suit une proc&eacute;dure standard : &quot;V&eacute;rifier le nom sur la liste, v&eacute;rifier l'identit&eacute;, laisser entrer&quot;. C'est efficace pour 90% des cas.</p><p id="mfxt7k_29">Mais que faire si les r&egrave;gles de votre &eacute;v&eacute;nement sont plus complexes ? Par exemple : &quot;L'invit&eacute; doit &ecirc;tre sur la liste, mais il doit aussi porter un accessoire rouge. Et s'il essaie d'entrer apr&egrave;s minuit, il doit payer un suppl&eacute;ment.&quot;</p><p id="mfxt7k_30">Une logique standard ne suffit plus. Vous devez donner des instructions sur mesure &agrave; votre videur. Dans ce chapitre, nous allons ouvrir le capot de Spring Security pour comprendre comment il prend ses d&eacute;cisions d'authentification. Nous apprendrons &agrave; construire notre propre &quot;processeur de logique&quot;, l' <span class="control" id="mfxt7k_31"><code class="code" id="mfxt7k_32">AuthenticationProvider</code></span>, pour g&eacute;rer des sc&eacute;narios d'authentification qui sortent de l'ordinaire.</p></section><section class="chapter"><h3 id="la-cha-ne-de-commandement-de-l-authentification" data-toc="la-cha-ne-de-commandement-de-l-authentification">La cha&icirc;ne de commandement de l'authentification</h3><p id="mfxt7k_33">Quand vous soumettez un formulaire de connexion, il ne se contente pas de v&eacute;rifier un mot de passe. Une cha&icirc;ne de composants entre en jeu.</p><style>.theme-dark .plantuml > svg {filter: hue-rotate(180deg) invert(0.9);}div.plantuml {overflow-x: auto;}</style><div class="plantuml"><?xml version="1.0" encoding="us-ascii" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="757px" preserveAspectRatio="none" style="width:1609px;height:757px;background:#FFFFFF;" version="1.1" viewBox="0 0 1609 757" width="1609px" zoomAndPan="magnify"><defs/><g><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="225" x="691" y="28.5352">Flux d'Authentification D&#233;taill&#233;</text><line style="stroke:#696969;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="23" x2="23" y1="118.9766" y2="676.5664"/><line style="stroke:#696969;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="169" x2="169" y1="118.9766" y2="676.5664"/><line style="stroke:#696969;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="414.5" x2="414.5" y1="118.9766" y2="676.5664"/><line style="stroke:#696969;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="762" x2="762" y1="118.9766" y2="676.5664"/><line style="stroke:#696969;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="1013" x2="1013" y1="118.9766" y2="676.5664"/><line style="stroke:#696969;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="1264.5" x2="1264.5" y1="118.9766" y2="676.5664"/><line style="stroke:#696969;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="1533" x2="1533" y1="118.9766" y2="676.5664"/><text fill="#454645" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="31" x="5" y="116.0234">User</text><ellipse cx="23.5" cy="50.9883" fill="#454645" rx="8" ry="8" style="stroke:#454645;stroke-width:0.5;"/><path d="M23.5,58.9883 L23.5,85.9883 M10.5,66.9883 L36.5,66.9883 M23.5,85.9883 L10.5,100.9883 M23.5,85.9883 L36.5,100.9883 " fill="none" style="stroke:#454645;stroke-width:0.5;"/><text fill="#454645" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="31" x="5" y="689.1016">User</text><ellipse cx="23.5" cy="700.5547" fill="#454645" rx="8" ry="8" style="stroke:#454645;stroke-width:0.5;"/><path d="M23.5,708.5547 L23.5,735.5547 M10.5,716.5547 L36.5,716.5547 M23.5,735.5547 L10.5,750.5547 M23.5,735.5547 L36.5,750.5547 " fill="none" style="stroke:#454645;stroke-width:0.5;"/><rect fill="#FF6347" height="30.4883" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="69" x="135" y="87.4883"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55" x="142" y="108.0234">Browser</text><rect fill="#FF6347" height="30.4883" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="69" x="135" y="675.5664"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55" x="142" y="696.1016">Browser</text><rect fill="#FF6347" height="46.9766" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="294" x="267.5" y="71"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35" x="397" y="91.5352">Filtre</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="280" x="274.5" y="108.0234">(UsernamePasswordAuthenticationFilter)</text><rect fill="#FF6347" height="46.9766" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="294" x="267.5" y="675.5664"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35" x="397" y="696.1016">Filtre</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="280" x="274.5" y="712.5898">(UsernamePasswordAuthenticationFilter)</text><rect fill="#FF6347" height="30.4883" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="175" x="675" y="87.4883"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="161" x="682" y="108.0234">AuthenticationManager</text><rect fill="#FF6347" height="30.4883" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="175" x="675" y="675.5664"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="161" x="682" y="696.1016">AuthenticationManager</text><rect fill="#FF6347" height="46.9766" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="209" x="909" y="71"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70" x="978.5" y="91.5352">Provider 1</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="195" x="916" y="108.0234">(DaoAuthenticationProvider)</text><rect fill="#FF6347" height="46.9766" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="209" x="909" y="675.5664"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70" x="978.5" y="696.1016">Provider 1</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="195" x="916" y="712.5898">(DaoAuthenticationProvider)</text><rect fill="#FF6347" height="46.9766" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="134" x="1197.5" y="71"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70" x="1229.5" y="91.5352">Provider 2</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="120" x="1204.5" y="108.0234">(CustomProvider)</text><rect fill="#FF6347" height="46.9766" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="134" x="1197.5" y="675.5664"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70" x="1229.5" y="696.1016">Provider 2</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="120" x="1204.5" y="712.5898">(CustomProvider)</text><rect fill="#FF6347" height="30.4883" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="139" x="1464" y="87.4883"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="125" x="1471" y="108.0234">UserDetailsService</text><rect fill="#FF6347" height="30.4883" rx="3.5" ry="3.5" style="stroke:#454645;stroke-width:1.5;" width="139" x="1464" y="675.5664"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="125" x="1471" y="696.1016">UserDetailsService</text><polygon fill="#454645" points="157.5,146.2871,167.5,150.2871,157.5,154.2871,161.5,150.2871" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;" x1="23.5" x2="163.5" y1="150.2871" y2="150.2871"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="122" x="30.5" y="145.5449">1. Saisit login/pass</text><polygon fill="#454645" points="402.5,175.5977,412.5,179.5977,402.5,183.5977,406.5,179.5977" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;" x1="169.5" x2="408.5" y1="179.5977" y2="179.5977"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="221" x="176.5" y="174.8555">2. POST /login avec les identifiants</text><line style="stroke:#454645;stroke-width:1.0;" x1="414.5" x2="456.5" y1="239.5293" y2="239.5293"/><line style="stroke:#454645;stroke-width:1.0;" x1="456.5" x2="456.5" y1="239.5293" y2="252.5293"/><line style="stroke:#454645;stroke-width:1.0;" x1="415.5" x2="456.5" y1="252.5293" y2="252.5293"/><polygon fill="#454645" points="425.5,248.5293,415.5,252.5293,425.5,256.5293,421.5,252.5293" style="stroke:#454645;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="100" x="421.5" y="204.166">3. Cr&#233;e un objet</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="269" x="421.5" y="219.4766">`UsernamePasswordAuthenticationToken`</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="136" x="421.5" y="234.7871">(&#233;tat: non authentifi&#233;)</text><polygon fill="#454645" points="750.5,277.8398,760.5,281.8398,750.5,285.8398,754.5,281.8398" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;" x1="414.5" x2="756.5" y1="281.8398" y2="281.8398"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="154" x="421.5" y="277.0977">4. `authenticate(token)`</text><polygon fill="#454645" points="1001.5,307.1504,1011.5,311.1504,1001.5,315.1504,1005.5,311.1504" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;" x1="762.5" x2="1007.5" y1="311.1504" y2="311.1504"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="173" x="769.5" y="306.4082">5. `supports(token)` ? (oui)</text><polygon fill="#454645" points="1521.5,336.4609,1531.5,340.4609,1521.5,344.4609,1525.5,340.4609" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;" x1="1013.5" x2="1527.5" y1="340.4609" y2="340.4609"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="183" x="1020.5" y="335.7188">6. `loadUserByUsername(...)`</text><polygon fill="#454645" points="1024.5,365.7715,1014.5,369.7715,1024.5,373.7715,1020.5,369.7715" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1018.5" x2="1532.5" y1="369.7715" y2="369.7715"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="217" x="1030.5" y="365.0293">7. `UserDetails` (avec mdp hach&#233;)</text><line style="stroke:#454645;stroke-width:1.0;" x1="1013.5" x2="1055.5" y1="399.082" y2="399.082"/><line style="stroke:#454645;stroke-width:1.0;" x1="1055.5" x2="1055.5" y1="399.082" y2="412.082"/><line style="stroke:#454645;stroke-width:1.0;" x1="1014.5" x2="1055.5" y1="412.082" y2="412.082"/><polygon fill="#454645" points="1024.5,408.082,1014.5,412.082,1024.5,416.082,1020.5,412.082" style="stroke:#454645;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="237" x="1020.5" y="394.3398">8. Compare les mots de passe (&#233;chec)</text><polygon fill="#454645" points="773.5,437.3926,763.5,441.3926,773.5,445.3926,769.5,441.3926" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="767.5" x2="1012.5" y1="441.3926" y2="441.3926"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="227" x="779.5" y="436.6504">9. Lance `BadCredentialsException`</text><polygon fill="#454645" points="1252.5,466.7031,1262.5,470.7031,1252.5,474.7031,1256.5,470.7031" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;" x1="762.5" x2="1258.5" y1="470.7031" y2="470.7031"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="181" x="769.5" y="465.9609">10. `supports(token)` ? (oui)</text><line style="stroke:#454645;stroke-width:1.0;" x1="1264.5" x2="1306.5" y1="500.0137" y2="500.0137"/><line style="stroke:#454645;stroke-width:1.0;" x1="1306.5" x2="1306.5" y1="500.0137" y2="513.0137"/><line style="stroke:#454645;stroke-width:1.0;" x1="1265.5" x2="1306.5" y1="513.0137" y2="513.0137"/><polygon fill="#454645" points="1275.5,509.0137,1265.5,513.0137,1275.5,517.0137,1271.5,513.0137" style="stroke:#454645;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="255" x="1271.5" y="495.2715">11. Applique sa logique custom (succ&#232;s)</text><polygon fill="#454645" points="773.5,553.6348,763.5,557.6348,773.5,561.6348,769.5,557.6348" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="767.5" x2="1263.5" y1="557.6348" y2="557.6348"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="252" x="779.5" y="537.582">12. Retourne un `AuthenticationToken`</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="204" x="779.5" y="552.8926">(&#233;tat: authentifi&#233;, avec autorit&#233;s)</text><polygon fill="#454645" points="425.5,582.9453,415.5,586.9453,425.5,590.9453,421.5,586.9453" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="419.5" x2="761.5" y1="586.9453" y2="586.9453"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="135" x="431.5" y="582.2031">13. Token authentifi&#233;</text><line style="stroke:#454645;stroke-width:1.0;" x1="414.5" x2="456.5" y1="616.2559" y2="616.2559"/><line style="stroke:#454645;stroke-width:1.0;" x1="456.5" x2="456.5" y1="616.2559" y2="629.2559"/><line style="stroke:#454645;stroke-width:1.0;" x1="415.5" x2="456.5" y1="629.2559" y2="629.2559"/><polygon fill="#454645" points="425.5,625.2559,415.5,629.2559,425.5,633.2559,421.5,629.2559" style="stroke:#454645;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="334" x="421.5" y="611.5137">14. Stocke le token dans le SecurityContext (Session)</text><polygon fill="#454645" points="180.5,654.5664,170.5,658.5664,180.5,662.5664,176.5,658.5664" style="stroke:#454645;stroke-width:1.0;"/><line style="stroke:#454645;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="174.5" x2="413.5" y1="658.5664" y2="658.5664"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="220" x="186.5" y="653.8242">15. Redirige vers la page de succ&#232;s</text><!--SRC=[ZLHDSzCm5BpxLpnwmPcXBWwK3nzWceIUw931xQq7g_8Z4RKb8ybf-u_8x_0VuqcEKolJThXPrhvTlzrDNjarrWWRSQEPj94Lja8uhzfxA5-VjNGfhVWbEBD2ILXqMyj4LNNRA6BSAWrN1dNKC6q55mqHm4ohkyDtH-UYiXglPUpWajMuPCRSALqE2Zs_Ww6U704pq3-7D27wWacsGktHxcPt3aUMMcr4YHfIKbym5L8CjxtaS4gVePWInRmrLjLFpqt3ERVh0frV9aUz4Hmz-cgHHv6xW-ClWriPf0daJ1XXeL8h8KyQCYZQtJfWRqS6qmIMF_9BEF4mO1laKA41qlT1aRA9Ul1ux5q2Szrj4Le9wkOtscjPl9p5fRf5MT36BdARWQJusRuFtNOoKXcvdy7x10hsI8MnTKoJ8ef6C3Urjpk3KvenRTCeRSs0XwyGgrPCeZtE3P5x6NmWUALOwJQOFGnxn4cIa0mXu3Ya_qZuKHe5nDwtkcnWpVZQBHE8Z4O_aN6gfbpHsrmhQw14SF4Wa3TyZJoOFhJZSmBVcUG8nOoLSuq-9rQPR_SS6sVqyyPCgHPl_yUPwU4KjUciQIhnfqKmp5VAFN9VNeXDotdtrmG4Xz-TKjD-ebMjbhurnSlr65VZJLzBUgMqiDsMXC8LHyLCgPcUAs1uei4fzIgtYj-w8C0x0IMJnfrov2qfFSoLj7Xl8SxH6Fh8nuu6FxLJjrafj5ZH_nvgec0KA1qes9qr_m00]--></g></svg></div><ol class="list _decimal" id="mfxt7k_35" type="1"><li class="list__item" id="mfxt7k_36"><p id="mfxt7k_40"><span class="control" id="mfxt7k_41"><code class="code" id="mfxt7k_45">Authentication</code></span>: C'est un objet qui contient les &quot;preuves&quot; (credentials) d'une tentative de connexion. Pour un formulaire, c'est un <code class="code" id="mfxt7k_42">UsernamePasswordAuthenticationToken</code> qui contient le <code class="code" id="mfxt7k_43">username</code> et le <code class="code" id="mfxt7k_44">password</code> saisis. Au d&eacute;but, il est &quot;non authentifi&eacute;&quot;.</p></li><li class="list__item" id="mfxt7k_37"><p id="mfxt7k_46"><span class="control" id="mfxt7k_47"><code class="code" id="mfxt7k_50">AuthenticationManager</code></span>: C'est le coordinateur. Il re&ccedil;oit l'objet <code class="code" id="mfxt7k_48">Authentication</code> et le d&eacute;l&egrave;gue &agrave; une liste de <code class="code" id="mfxt7k_49">AuthenticationProvider</code>. Il ne fait pas le travail lui-m&ecirc;me, il manage.</p></li><li class="list__item" id="mfxt7k_38"><p id="mfxt7k_51"><span class="control" id="mfxt7k_53"><code class="code" id="mfxt7k_55">AuthenticationProvider</code></span>: C'est le v&eacute;ritable travailleur. Chaque <code class="code" id="mfxt7k_54">Provider</code> est sp&eacute;cialis&eacute; dans un type d'authentification.</p><ul class="list _bullet" id="mfxt7k_52"><li class="list__item" id="mfxt7k_56"><p id="mfxt7k_58">Le provider par d&eacute;faut pour les formulaires est le <span class="control" id="mfxt7k_59"><code class="code" id="mfxt7k_62">DaoAuthenticationProvider</code></span>. C'est lui qui utilise votre <code class="code" id="mfxt7k_60">UserDetailsService</code> pour r&eacute;cup&eacute;rer l'utilisateur et votre <code class="code" id="mfxt7k_61">PasswordEncoder</code> pour comparer les mots de passe.</p></li><li class="list__item" id="mfxt7k_57"><p id="mfxt7k_63">Vous pouvez cr&eacute;er le v&ocirc;tre pour une logique personnalis&eacute;e.</p></li></ul></li><li class="list__item" id="mfxt7k_39"><p id="mfxt7k_64"><span class="control" id="mfxt7k_66">Le processus</span>:</p><ul class="list _bullet" id="mfxt7k_65"><li class="list__item" id="mfxt7k_67"><p id="mfxt7k_71">L' <code class="code" id="mfxt7k_72">AuthenticationManager</code> demande &agrave; chaque <code class="code" id="mfxt7k_73">Provider</code>: &quot;Sais-tu g&eacute;rer ce type d'authentification (<code class="code" id="mfxt7k_74">supports()</code>) ?&quot;.</p></li><li class="list__item" id="mfxt7k_68"><p id="mfxt7k_75">Le premier qui r&eacute;pond &quot;oui&quot; essaie d'authentifier l'utilisateur.</p></li><li class="list__item" id="mfxt7k_69"><p id="mfxt7k_76">S'il r&eacute;ussit, il retourne un nouvel objet <code class="code" id="mfxt7k_77">Authentication</code> &quot;authentifi&eacute;&quot;, rempli avec les autorit&eacute;s (r&ocirc;les) de l'utilisateur. Le processus s'arr&ecirc;te.</p></li><li class="list__item" id="mfxt7k_70"><p id="mfxt7k_78">S'il &eacute;choue, il l&egrave;ve une exception (ex: <code class="code" id="mfxt7k_79">BadCredentialsException</code>), et le manager peut passer au provider suivant.</p></li></ul></li></ol></section><section class="chapter"><h3 id="impl-menter-un-authenticationprovider-personnalis" data-toc="impl-menter-un-authenticationprovider-personnalis">Impl&eacute;menter un <code class="code" id="mfxt7k_85">AuthenticationProvider</code> personnalis&eacute;</h3><p id="mfxt7k_81">Imaginons un cas d'usage : nous voulons un code secret suppl&eacute;mentaire dans le champ du mot de passe. Par exemple, le mot de passe doit &ecirc;tre <code class="code" id="mfxt7k_86">vrai_mot_de_passe#code_secret</code>.</p><p id="mfxt7k_82"><span class="control" id="mfxt7k_87">&Eacute;tape 1 : Cr&eacute;er la classe du Provider</span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.security;
+
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CustomAuthenticationProvider implements AuthenticationProvider {
+
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+
+    public CustomAuthenticationProvider(UserDetailsService userDetailsService,
+                                        PasswordEncoder passwordEncoder) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public Authentication authenticate(Authentication authentication)
+            throws AuthenticationException {
+        // 1. Récupérer les informations de connexion
+        String username = authentication.getName();
+        String password = authentication.getCredentials().toString();
+
+        // 2. Récupérer les détails de l'utilisateur depuis la base de données
+        UserDetails user = userDetailsService.loadUserByUsername(username);
+
+        // 3. Appliquer notre logique personnalisée
+        if (password.contains(&quot;#&quot;)) {
+            String[] parts = password.split(&quot;#&quot;);
+            String realPassword = parts[0];
+            String secretCode = parts[1];
+
+            // 4. Vérifier le mot de passe ET le code secret
+            if (passwordEncoder.matches(realPassword, user.getPassword()) &amp;&amp;
+                    secretCode.equals(&quot;1234&quot;)) {
+                // 5. Si tout est OK, on retourne un token authentifié
+                return new UsernamePasswordAuthenticationToken(
+                        user.getUsername(),
+                        user.getPassword(),
+                        user.getAuthorities());
+            }
+        }
+
+        // 6. Si la logique échoue, on lève une exception
+        throw new BadCredentialsException(&quot;Invalid password or secret code&quot;);
+    }
+
+    @Override
+    public boolean supports(Class&lt;?&gt; authentication) {
+        // Ce provider ne gère que les tokens de type UsernamePassword
+        return UsernamePasswordAuthenticationToken.class
+                .isAssignableFrom(authentication);
+    }
+}
+</div><aside class="prompt" data-type="tip" data-title="" id="mfxt7k_84"><p>Notre `CustomAuthenticationProvider` est maintenant un bean Spring gr&acirc;ce &agrave; `@Component`. Spring Boot le d&eacute;tectera et l'ajoutera automatiquement &agrave; la liste des providers de l'`AuthenticationManager`. Il sera essay&eacute; *avant* le `DaoAuthenticationProvider` par d&eacute;faut.</p></aside></section><section class="chapter"><h3 id="gestion-fine-des-erreurs-d-authentification" data-toc="gestion-fine-des-erreurs-d-authentification">Gestion fine des erreurs d'authentification</h3><p id="mfxt7k_88">Par d&eacute;faut, Spring redirige vers <code class="code" id="mfxt7k_97">/login?error</code> en cas d'&eacute;chec. C'est un peu vague. On peut faire mieux en cr&eacute;ant un <code class="code" id="mfxt7k_98">AuthenticationFailureHandler</code>.</p><p id="mfxt7k_89"><span class="control" id="mfxt7k_99"><code class="code" id="mfxt7k_100">fr/formation/spring/taskmaster/security/CustomAuthFailureHandler.java</code></span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.security;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+
+@Component
+public class CustomAuthFailureHandler
+        extends SimpleUrlAuthenticationFailureHandler {
+
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        AuthenticationException exception)
+            throws IOException, ServletException {
+
+        String errorMessage = &quot;Identifiants invalides.&quot;;
+
+        // On peut personnaliser le message en fonction du type d'exception
+        if (exception.getMessage().contains(&quot;secret code&quot;)) {
+            errorMessage = &quot;Le code secret est incorrect.&quot;;
+        }
+
+        // On stocke le message dans la session pour l'afficher sur la page
+        request.getSession().setAttribute(&quot;errorMessage&quot;, errorMessage);
+
+        // On redirige vers une URL spécifique
+        setDefaultFailureUrl(&quot;/connexion?error&quot;);
+        super.onAuthenticationFailure(request, response, exception);
+    }
+}
+</div><p id="mfxt7k_91"><span class="control" id="mfxt7k_101">Brancher le handler dans <code class="code" id="mfxt7k_102">SecurityConfig</code></span></p><div class="code-block" data-lang="java">
+// Dans SecurityConfig, injecter le handler
+private final CustomAuthFailureHandler failureHandler;
+
+public SecurityConfig(CustomAuthFailureHandler failureHandler) {
+    this.failureHandler = failureHandler;
+}
+
+// ... dans le securityFilterChain
+.
+
+formLogin(form -&gt;form
+        .
+
+loginPage(&quot;/connexion&quot;)
+// ...
+    .
+
+failureHandler(failureHandler) // On utilise notre handler
+)
+</div><p id="mfxt7k_93"><span class="control" id="mfxt7k_103">Afficher le message dans <code class="code" id="mfxt7k_104">connexion.html</code></span></p><div class="code-block" data-lang="markup">
+
+&lt;div th:if=&quot;${param.error}&quot; style=&quot;color: red;&quot;&gt;
+    &lt;p th:text=&quot;${session.errorMessage}&quot;&gt;Message d'erreur par défaut&lt;/p&gt;
+&lt;/div&gt;
+</div><p id="mfxt7k_95">Maintenant, vos utilisateurs ont un retour bien plus pr&eacute;cis sur la raison de l'&eacute;chec.</p></section></section><section class="chapter"><h2 id="pour-aller-plus-loin" data-toc="pour-aller-plus-loin">Pour aller plus loin</h2><section class="chapter"><h3 id="personnalisation-des-redirections-apr-s-connexion" data-toc="personnalisation-des-redirections-apr-s-connexion">Personnalisation des redirections apr&egrave;s connexion</h3><p id="mfxt7k_110">De la m&ecirc;me mani&egrave;re que pour les &eacute;checs, on peut g&eacute;rer les succ&egrave;s de connexion avec un <code class="code" id="mfxt7k_116">AuthenticationSuccessHandler</code>. C'est utile pour des redirections dynamiques. Par exemple, rediriger les admins vers <code class="code" id="mfxt7k_117">/admin/dashboard</code> et les utilisateurs vers <code class="code" id="mfxt7k_118">/dashboard</code>.</p><p id="mfxt7k_111"><span class="control" id="mfxt7k_119"><code class="code" id="mfxt7k_120">fr/formation/spring/taskmaster/security/CustomAuthSuccessHandler.java</code></span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.security;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.Collection;
+
+@Component
+public class CustomAuthSuccessHandler implements AuthenticationSuccessHandler {
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication)
+            throws IOException {
+
+        String redirectUrl = null;
+        Collection&lt;? extends GrantedAuthority&gt; authorities =
+                authentication.getAuthorities();
+
+        for (GrantedAuthority grantedAuthority : authorities) {
+            if (grantedAuthority.getAuthority().equals(&quot;ROLE_ADMIN&quot;)) {
+                redirectUrl = &quot;/api/admin/dashboard&quot;; // Ou une vraie page
+                break;
+            } else if (grantedAuthority.getAuthority().equals(&quot;ROLE_USER&quot;)) {
+                redirectUrl = &quot;/projects&quot;;
+                break;
+            }
+        }
+
+        if (redirectUrl == null) {
+            throw new IllegalStateException(&quot;No role found, cannot redirect.&quot;);
+        }
+
+        response.sendRedirect(redirectUrl);
+    }
+}
+</div><p id="mfxt7k_113"><span class="control" id="mfxt7k_121">Brancher le handler dans <code class="code" id="mfxt7k_122">SecurityConfig</code></span></p><div class="code-block" data-lang="java">
+// Injecter le successHandler et le failureHandler...
+
+// ... dans le securityFilterChain
+.formLogin(form -&gt;form
+        .
+
+loginPage(&quot;/connexion&quot;)
+    .
+
+successHandler(successHandler) // Redirection dynamique
+    .
+
+failureHandler(failureHandler) // Gestion fine des erreurs
+)
+</div><p id="mfxt7k_115">Avec ce handler, <code class="code" id="mfxt7k_123">defaultSuccessUrl()</code> n'est plus n&eacute;cessaire.</p></section><section class="chapter"><h3 id="exercice-8-authentification-par-code-pin" data-toc="exercice-8-authentification-par-code-pin">Exercice 8 : Authentification par code PIN</h3><section class="procedure-steps"><h3 id="exercice-2-2" data-toc="exercice-2-2">Mise en place d'une authentification à deux facteurs simples</h3><p id="mfxt7k_125">Nous allons impl&eacute;menter une forme simple d'authentification &agrave; deux facteurs pour <b id="mfxt7k_127">TaskMaster</b>. Chaque utilisateur aura un code PIN &agrave; 4 chiffres en plus de son mot de passe.</p><ol class="list _decimal" id="mfxt7k_126" type="1"><li class="list__item" id="mfxt7k_128"><p>Ajoutez un champ <code class="code" id="mfxt7k_134">pinCode</code> (String) &agrave; votre entit&eacute; <code class="code" id="mfxt7k_135">User</code>. Mettez &agrave; jour votre <code class="code" id="mfxt7k_136">DataSeeder</code> pour attribuer un code PIN (par exemple, &quot;1111&quot; pour John et &quot;2222&quot; pour Jane). Le PIN sera stock&eacute; en clair pour cet exercice.</p></li><li class="list__item" id="mfxt7k_129"><p>Cr&eacute;ez un <code class="code" id="mfxt7k_137">AuthenticationProvider</code> personnalis&eacute; nomm&eacute; <code class="code" id="mfxt7k_138">PinAuthenticationProvider</code>. </p><ul class="list _bullet" id="mfxt7k_139"><li class="list__item" id="mfxt7k_140"><p>Il doit injecter <code class="code" id="mfxt7k_146">UserDetailsService</code> et <code class="code" id="mfxt7k_147">PasswordEncoder</code>.</p></li><li class="list__item" id="mfxt7k_141"><p>Sa m&eacute;thode <code class="code" id="mfxt7k_148">authenticate</code> doit d'abord v&eacute;rifier le mot de passe de l'utilisateur de mani&egrave;re standard (en utilisant le <code class="code" id="mfxt7k_149">PasswordEncoder</code>).</p></li><li class="list__item" id="mfxt7k_142"><p><b id="mfxt7k_150">Ensuite</b>, elle doit r&eacute;cup&eacute;rer le PIN saisi par l'utilisateur. Le format convenu sera <code class="code" id="mfxt7k_151">motdepasse:pin</code> (ex: <code class="code" id="mfxt7k_152">pass1:1111</code>).</p></li><li class="list__item" id="mfxt7k_143"><p>Si le mot de passe est correct ET que le PIN est correct, l'authentification r&eacute;ussit.</p></li><li class="list__item" id="mfxt7k_144"><p>Si le mot de passe est incorrect, levez une <code class="code" id="mfxt7k_153">BadCredentialsException(&quot;Invalid password.&quot;)</code>.</p></li><li class="list__item" id="mfxt7k_145"><p>Si le mot de passe est correct mais le PIN est incorrect, levez une <code class="code" id="mfxt7k_154">BadCredentialsException(&quot;Invalid PIN code.&quot;)</code>.</p></li></ul></li><li class="list__item" id="mfxt7k_130"><p>Annotez votre <code class="code" id="mfxt7k_155">PinAuthenticationProvider</code> avec <code class="code" id="mfxt7k_156">@Component</code> pour qu'il soit automatiquement enregistr&eacute; par Spring.</p></li><li class="list__item" id="mfxt7k_131"><p>Cr&eacute;ez un <code class="code" id="mfxt7k_157">CustomAuthFailureHandler</code> qui affiche un message d'erreur diff&eacute;rent sur la page de connexion selon que le mot de passe ou le PIN est invalide.</p></li><li class="list__item" id="mfxt7k_132"><p>Mettez &agrave; jour votre <code class="code" id="mfxt7k_158">SecurityConfig</code> pour utiliser ce nouveau `failureHandler`.</p></li><li class="list__item" id="mfxt7k_133"><p>Testez tous les cas : connexion r&eacute;ussie, mot de passe incorrect, PIN incorrect.</p></li></ol><ol class="list _decimal"></ol></section></section><section class="chapter"><div class="collapse"><div class="collapse__title"><h3 id="correction-exercice-8" data-toc="correction-exercice-8">Correction exercice 8</h3></div><div class="collapse__content"><p id="mfxt7k_159"><span class="control" id="mfxt7k_171">1. <code class="code" id="mfxt7k_172">User.java</code> (ajout du champ <code class="code" id="mfxt7k_173">pinCode</code>)</span></p><div class="code-block" data-lang="java">
+
+@Entity
+@Table(name = &quot;users&quot;)
+public class User implements UserDetails {
+    // ... autres champs ...
+    private String pinCode;
+    // ... getters/setters pour pinCode ...
+    // ... reste de la classe ...
+}
+</div><p id="mfxt7k_161"><span class="control" id="mfxt7k_174">2. <code class="code" id="mfxt7k_175">DataSeeder.java</code> (mise &agrave; jour)</span></p><div class="code-block" data-lang="java">
+// ... dans la méthode run() ...
+// Pour l'utilisateur
+user.setPinCode(&quot;1111&quot;);
+userRepository.
+
+save(user);
+
+// Pour l'admin
+admin.
+
+setPinCode(&quot;2222&quot;);
+userRepository.
+
+save(admin);
+</div><p id="mfxt7k_163"><span class="control" id="mfxt7k_176">3. <code class="code" id="mfxt7k_177">PinAuthenticationProvider.java</code></span></p><div class="code-block" data-lang="java">
+package fr.formation.spring.taskmaster.security;
+
+import fr.formation.spring.taskmaster.model.User;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+public class PinAuthenticationProvider implements AuthenticationProvider {
+
+    private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+
+    // ... constructeur ...
+
+    @Override
+    public Authentication authenticate(Authentication authentication) {
+        String username = authentication.getName();
+        String passwordAndPin = authentication.getCredentials().toString();
+
+        User user = (User) userDetailsService.loadUserByUsername(username);
+
+        String[] parts = passwordAndPin.split(&quot;:&quot;);
+        if (parts.length != 2) {
+            throw new BadCredentialsException(&quot;Password format must be password:pin&quot;);
+        }
+        String password = parts[0];
+        String pin = parts[1];
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadCredentialsException(&quot;Invalid password.&quot;);
+        }
+
+        if (!user.getPinCode().equals(pin)) {
+            throw new BadCredentialsException(&quot;Invalid PIN code.&quot;);
+        }
+
+        return new UsernamePasswordAuthenticationToken(
+                user.getUsername(), user.getPassword(), user.getAuthorities());
+    }
+
+    @Override
+    public boolean supports(Class&lt;?&gt; authentication) {
+        return UsernamePasswordAuthenticationToken.class
+                .isAssignableFrom(authentication);
+    }
+}
+</div><p id="mfxt7k_165"><span class="control" id="mfxt7k_178">4. <code class="code" id="mfxt7k_179">CustomAuthFailureHandler.java</code></span></p><div class="code-block" data-lang="java">
+// ... dans onAuthenticationFailure ...
+String errorMessage;
+if(exception.
+
+getMessage().
+
+contains(&quot;password&quot;)){
+errorMessage =&quot;Le mot de passe est incorrect.&quot;;
+        }else if(exception.
+
+getMessage().
+
+contains(&quot;PIN&quot;)){
+errorMessage =&quot;Le code PIN est invalide.&quot;;
+        }else{
+errorMessage =&quot;Format de connexion invalide (mdp:pin).&quot;;
+        }
+        request.
+
+getSession().
+
+setAttribute(&quot;errorMessage&quot;,errorMessage);
+// ... reste de la méthode ...
+</div><p id="mfxt7k_167"><span class="control" id="mfxt7k_180">5. <code class="code" id="mfxt7k_181">SecurityConfig.java</code> (mise &agrave; jour)</span></p><div class="code-block" data-lang="java">
+// ...
+// Injection du handler
+private final CustomAuthFailureHandler failureHandler;
+
+// Constructeur...
+
+// Dans le filter chain:
+.
+
+formLogin(form -&gt;form
+        // ...
+        .
+
+failureHandler(failureHandler)
+)
+</div><p id="mfxt7k_169"><span class="control" id="mfxt7k_182">Tests :</span></p><ul class="list _bullet" id="mfxt7k_170"><li class="list__item" id="mfxt7k_183"><p id="mfxt7k_186">Entrer <code class="code" id="mfxt7k_187">john.doe</code>/<code class="code" id="mfxt7k_188">pass1:1111</code>: connexion r&eacute;ussie.</p></li><li class="list__item" id="mfxt7k_184"><p id="mfxt7k_189">Entrer <code class="code" id="mfxt7k_190">john.doe</code>/<code class="code" id="mfxt7k_191">mauvaismdp:1111</code>: &eacute;chec avec le message &quot;Le mot de passe est incorrect.&quot;</p></li><li class="list__item" id="mfxt7k_185"><p id="mfxt7k_192">Entrer <code class="code" id="mfxt7k_193">john.doe</code>/<code class="code" id="mfxt7k_194">pass1:0000</code>: &eacute;chec avec le message &quot;Le code PIN est invalide.&quot;</p></li></ul></div></div></section><section class="chapter"><h3 id="auto-valuation" data-toc="auto-valuation">Auto-&eacute;valuation</h3><ol class="list _decimal" id="mfxt7k_195" type="1"><li class="list__item" id="mfxt7k_196"><p id="mfxt7k_201"><span class="control" id="mfxt7k_202">Question ouverte :</span> D&eacute;crivez le r&ocirc;le de l' <code class="code" id="mfxt7k_203">AuthenticationManager</code> et comment il interagit avec les <code class="code" id="mfxt7k_204">AuthenticationProvider</code>.</p></li><li class="list__item" id="mfxt7k_197"><p id="mfxt7k_205"><span class="control" id="mfxt7k_207">QCM :</span> Quel est le r&ocirc;le de la m&eacute;thode <code class="code" id="mfxt7k_208">supports(Class&lt;?&gt; authentication)</code> dans un <code class="code" id="mfxt7k_209">AuthenticationProvider</code>?</p><ul class="list _bullet" id="mfxt7k_206"><li class="list__item" id="mfxt7k_210"><p id="mfxt7k_214">a) V&eacute;rifier si l'utilisateur a les bons r&ocirc;les.</p></li><li class="list__item" id="mfxt7k_211"><p id="mfxt7k_215">b) Indiquer si ce provider est capable de g&eacute;rer le type d'objet <code class="code" id="mfxt7k_216">Authentication</code> fourni.</p></li><li class="list__item" id="mfxt7k_212"><p id="mfxt7k_217">c) Lancer l'authentification.</p></li><li class="list__item" id="mfxt7k_213"><p id="mfxt7k_218">d) V&eacute;rifier si la version de Spring est support&eacute;e.</p></li></ul></li><li class="list__item" id="mfxt7k_198"><p id="mfxt7k_219"><span class="control" id="mfxt7k_221">QCM :</span> Pour impl&eacute;menter une redirection dynamique apr&egrave;s une connexion r&eacute;ussie (par exemple, bas&eacute;e sur le r&ocirc;le de l'utilisateur), quel composant devez-vous cr&eacute;er ?</p><ul class="list _bullet" id="mfxt7k_220"><li class="list__item" id="mfxt7k_222"><p id="mfxt7k_226">a) Un <code class="code" id="mfxt7k_227">AuthenticationSuccessHandler</code></p></li><li class="list__item" id="mfxt7k_223"><p id="mfxt7k_228">b) Un <code class="code" id="mfxt7k_229">AuthenticationRedirector</code></p></li><li class="list__item" id="mfxt7k_224"><p id="mfxt7k_230">c) Un <code class="code" id="mfxt7k_231">LoginSuccessManager</code></p></li><li class="list__item" id="mfxt7k_225"><p id="mfxt7k_232">d) Un <code class="code" id="mfxt7k_233">AuthenticationProvider</code></p></li></ul></li><li class="list__item" id="mfxt7k_199"><p id="mfxt7k_234"><span class="control" id="mfxt7k_235">Question ouverte :</span> Pourquoi le fait de cr&eacute;er un <code class="code" id="mfxt7k_236">AuthenticationProvider</code> personnalis&eacute; offre-t-il plus de flexibilit&eacute; que de simplement surcharger le <code class="code" id="mfxt7k_237">UserDetailsService</code>?</p></li><li class="list__item" id="mfxt7k_200"><p id="mfxt7k_238"><span class="control" id="mfxt7k_240">QCM :</span> Si vous cr&eacute;ez un <code class="code" id="mfxt7k_241">AuthenticationProvider</code> avec l'annotation <code class="code" id="mfxt7k_242">@Component</code> et que vous ne changez rien d'autre, que se passera-t-il ?</p><ul class="list _bullet" id="mfxt7k_239"><li class="list__item" id="mfxt7k_243"><p id="mfxt7k_247">a) Il ne sera pas utilis&eacute;.</p></li><li class="list__item" id="mfxt7k_244"><p id="mfxt7k_248">b) Il remplacera compl&egrave;tement le <code class="code" id="mfxt7k_249">DaoAuthenticationProvider</code> par d&eacute;faut.</p></li><li class="list__item" id="mfxt7k_245"><p id="mfxt7k_250">c) Il sera ajout&eacute; &agrave; la liste des providers et sera probablement essay&eacute; avant celui par d&eacute;faut.</p></li><li class="list__item" id="mfxt7k_246"><p id="mfxt7k_251">d) Il provoquera une erreur au d&eacute;marrage, car il y aura deux providers.</p></li></ul></li></ol></section><section class="chapter"><h3 id="conclusion" data-toc="conclusion">Conclusion</h3><p id="mfxt7k_252">Vous avez plong&eacute; au c&oelig;ur de la machine d'authentification de Spring Security ! Vous n'&ecirc;tes plus limit&eacute; par les m&eacute;canismes par d&eacute;faut. Vous savez maintenant comment le processus fonctionne de bout en bout, de l'objet <code class="code" id="mfxt7k_256">Authentication</code> initial &agrave; la d&eacute;cision finale prise par un <code class="code" id="mfxt7k_257">AuthenticationProvider</code>.</p><p id="mfxt7k_253">Vous &ecirc;tes capable de cr&eacute;er des logiques d'authentification complexes et sur mesure, de g&eacute;rer les succ&egrave;s et les &eacute;checs avec finesse, et de fournir une exp&eacute;rience utilisateur bien plus riche et s&eacute;curis&eacute;e.</p><p id="mfxt7k_254">Cette comp&eacute;tence est fondamentale, car de nombreuses entreprises ont des r&egrave;gles d'authentification qui leur sont propres (connexion via un matricule, double v&eacute;rification, etc.).</p><p id="mfxt7k_255">Dans le prochain chapitre, nous allons nous tourner vers le monde moderne des API REST et des applications &quot;stateless&quot; en explorant l'une des technologies les plus importantes dans ce domaine : les <span class="control" id="mfxt7k_258">JSON Web Tokens (JWT)</span>. Nous allons quitter le monde des sessions pour celui des tokens.</p></section></section><div class="last-modified">15 juin 2025</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom"><a href="006-00-user-in-database.html" class="navigation-links__prev">Module 2 / Chapitre 6 : Gestion des Utilisateurs en Base de Donn&eacute;es</a><a href="008-00-jwt.html" class="navigation-links__next">Module 2 / Chapitre 8 : Authentification via JWT (JSON Web Tokens)</a></div></article><div id="disqus_thread"></div></div></section></main></div><script src="https://resources.jetbrains.com/writerside/apidoc/6.22.0-b776/app.js"></script></body></html>
