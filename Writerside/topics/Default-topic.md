@@ -1,10 +1,3 @@
-Absolument ! C'est une excellente initiative de vouloir structurer un cours sur Spring Security. C'est un sujet dense
-mais essentiel pour tout développeur. Mettons-nous au travail pour créer un support clair, engageant et très pratique.
-
-Voici la première partie, correspondant au **Module 1, Chapitre 1**.
-
----
-
 # Module 1 / Chapitre 1 : Introduction à la Sécurité et aux Enjeux Web
 
 ## L'essentiel
@@ -207,7 +200,7 @@ Chaque couche ajoute une barrière supplémentaire.
 ### Correction exercice 1 {collapsible="true"}
 
 <p>Voici une analyse possible des vulnérabilités du scénario :</p>
-<ol>
+<ul>
     <li>
         <strong>Vulnérabilité : Stockage des mots de passe en clair (Point 4).</strong>
         <ul>
@@ -236,7 +229,7 @@ Chaque couche ajoute une barrière supplémentaire.
             <li><strong>Explication :</strong> Un attaquant pourrait créer une page web piégée et y attirer un utilisateur connecté au site e-commerce. Cette page pourrait contenir une requête cachée qui appelle l'URL <code>/profil/change-email?new_email=email.de.l.attaquant@example.com</code>. L'email de l'utilisateur serait changé à son insu, permettant à l'attaquant de lancer une procédure de "mot de passe oublié" et de prendre le contrôle du compte. L'absence de token CSRF rend cette attaque possible sur une requête GET qui modifie l'état du système (ce qui est déjà une mauvaise pratique en soi, les actions de modification devraient utiliser POST/PUT/DELETE).</li>
         </ul>
     </li>
-</ol>
+</ul>
 <p>Excellent travail si vous avez repéré ces points ! Cela montre que vous commencez déjà à penser avec une mentalité "sécurité".</p>
 
 ### Auto-évaluation
